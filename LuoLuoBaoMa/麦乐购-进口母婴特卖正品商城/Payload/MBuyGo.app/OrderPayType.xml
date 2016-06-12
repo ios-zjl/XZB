@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Notes>
+    <Note id ="1">
+        <orderID>1111111112345678123445</orderID>
+        <orderPrice>45元</orderPrice>
+        <remian>260元</remian>
+        <payTypeArray>
+           <typeID tid="0">
+              <typeStr>国际支付包</typeStr>
+              <isShowPayType>1</isShowPayType>
+           </typeID>
+           <typeID tid="1">
+               <typeStr>支付宝网页版</typeStr>
+               <isShowPayType>0</isShowPayType>
+           </typeID >
+           <typeID tid="2">
+               <typeStr>支付宝客服端</typeStr>
+               <isShowPayType>0</isShowPayType>
+           </typeID>
+        </payTypeArray>
+    </Note>
+</Notes>

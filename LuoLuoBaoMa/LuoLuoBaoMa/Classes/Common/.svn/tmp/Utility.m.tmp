@@ -1,0 +1,282 @@
+//
+//  Utility.m
+//
+//  Created by songjh on 15-10-22.
+//  Copyright (c) 2015年 小伍. All rights reserved.
+//
+
+#import "Utility.h"
+#import "APIKey.h"
+#import "Common.h"
+
+//#import "UMSocialData.h"
+//#import "UMSocialWechatHandler.h"
+//#import "UMSocialQQHandler.h"
+//#import "UMSocialSinaSSOHandler.h"
+//#import "UMSocialSnsService.h"
+//
+//#import "UMSocialSnsPlatformManager.h"
+
+#import "UMSocialData.h"
+#import "UMSocialWechatHandler.h"
+#import "UMSocialQQHandler.h"
+#import "UMSocialSinaSSOHandler.h"
+#import "UMSocialSnsService.h"
+#import "UMSocialSnsPlatformManager.h"
+
+#define POLICYTIME (int)3600*6  //定时策略更新 s/秒
+
+@interface Utility ()
+{
+  
+}
+@property (nonatomic, copy) AMapLocatingCompletionBlock completionBlock;
+@end
+
+@implementation Utility
+
++ (Utility *)shared
+{
+    static Utility * utility = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        utility = [[Utility alloc]init];
+    });
+    return utility;
+}
+
+#pragma mark - 安装app定时器
+- (void)ScheduledInstall
+{
+    if (_m_Schedule == nil)
+    {
+         NSLog(@"open timer");
+        _m_Schedule = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(refreshProgress) userInfo:nil repeats:YES];
+    }
+    else
+    {
+        // 开启定时器
+        if (![_m_Schedule isValid])
+        {
+            [self opneScheduled];
+        }
+    }
+}
+
+- (void)unScheduledInstall
+{
+    if (_m_Schedule != nil)
+    {
+        NSLog(@"close timer");
+        [_m_Schedule invalidate];
+        _m_Schedule = nil;
+    }
+}
+
+- (void)closeScheduled
+{
+    if (_m_Schedule != nil)
+    {
+        [_m_Schedule setFireDate:[NSDate distantFuture]];
+    }
+}
+
+- (void)opneScheduled
+{
+    if (_m_Schedule != nil)
+    {
+        [_m_Schedule setFireDate:[NSDate distantPast]];
+    }
+}
+
+- (void)refreshProgress
+{
+    
+}
+
+#pragma mark - 配置高德地图
+- (void)configureAPIKey
+{
+    if ([APIKey length] == 0)
+    {
+        NSString *reason = [NSString stringWithFormat:@"apiKey为空，请检查key是否正确设置。"];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:reason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        
+        [alert show];
+    }
+    else
+    {
+        [MAMapServices sharedServices].apiKey = (NSString *)APIKey;
+        [AMapLocationServices sharedServices].apiKey = (NSString *)APIKey;
+        [AMapSearchServices sharedServices].apiKey = (NSString *)APIKey;
+    }
+}
+
+- (void)initLocationManager
+{
+    self.m_locationManager = [[AMapLocationManager alloc] init];
+    self.m_locationManager.delegate = self;
+    
+    [self initCompleteBlock];
+
+}
+
+- (void)startLocation
+{
+    if (self.m_locationManager != nil)
+    {
+        [self.m_locationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
+        [self.m_locationManager requestLocationWithReGeocode:YES completionBlock:self.completionBlock];
+        //    [self.m_locationManager setLocationTimeout:6];
+        //    [self.m_locationManager setReGeocodeTimeout:3];
+    }
+    else
+    {
+        self.m_locationManager = [[AMapLocationManager alloc] init];
+        self.m_locationManager.delegate = self;
+        
+        [self initCompleteBlock];
+        [self startLocation];
+    }
+}
+
+- (void)initCompleteBlock
+{
+    __weak Utility *wSelf = self;
+    self.completionBlock = ^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error)
+    {
+        if (error)
+        {
+            NSLog(@"locError:{%ld - %@};", (long)error.code, error.localizedDescription);
+            
+            if (error.code == AMapLocationErrorLocateFailed)
+            {
+                return;
+            }
+        }
+        
+        if (location)
+        {
+            MAPointAnnotation *annotation = [[MAPointAnnotation alloc] init];
+            [annotation setCoordinate:location.coordinate];
+            
+            if (regeocode)
+            {
+//                [annotation setTitle:[NSString stringWithFormat:@"%@", regeocode.formattedAddress]];
+//                [annotation setSubtitle:[NSString stringWithFormat:@"%@-%@-%.2fm", regeocode.citycode, regeocode.adcode, location.horizontalAccuracy]];
+                [annotation setTitle:[NSString stringWithFormat:@"%@·%@",regeocode.province,regeocode.AOIName]];
+                [annotation setSubtitle:regeocode.formattedAddress];
+                
+            }
+            else
+            {
+//                [annotation setTitle:[NSString stringWithFormat:@"lat:%f;lon:%f;", location.coordinate.latitude, location.coordinate.longitude]];
+//                [annotation setSubtitle:[NSString stringWithFormat:@"accuracy:%.2fm", location.horizontalAccuracy]];
+            }
+            Utility *sSelf = wSelf;
+            [sSelf addAnnotationToMapView:annotation];
+            
+        }
+    };
+}
+
+- (void)addAnnotationToMapView:(id<MAAnnotation>)annotation
+{
+    self.m_annotation = [[MAPointAnnotation alloc] init];
+    [self.m_annotation setCoordinate:annotation.coordinate];
+    [self.m_annotation setTitle:[annotation title]];
+    [self.m_annotation setSubtitle:[annotation subtitle]];
+    
+    NSLog(@"高德 经度 = %fd, 纬度 = %fd",self.m_annotation.coordinate.latitude,self.m_annotation.coordinate.longitude);
+//    NSString *TokendStr = [[FileManager sharedInstance]getUserDefault:@"tokenId"];
+//    if (TokendStr != nil)
+//    {
+//        [[EMLocation sharedInstance] msgC2S_Location:TokendStr longitude:[NSString stringWithFormat:@"%fd",self.m_annotation.coordinate.longitude] latitude:[NSString stringWithFormat:@"%fd",self.m_annotation.coordinate.latitude]];
+//    }
+    
+}
+
+#pragma mark - AMapLocationManager Delegate
+- (void)amapLocationManager:(AMapLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"%s, amapLocationManager = %@, error = %@", __func__, [manager class], error);
+}
+
+- (void)amapLocationManager:(AMapLocationManager *)manager didUpdateLocation:(CLLocation *)location
+{
+    NSLog(@"%s, didUpdateLocation = {lat:%f; lon:%f;}", __func__, location.coordinate.latitude, location.coordinate.longitude);
+}
+
+#pragma mark - 配置友盟地图
+- (void)configureUmengKey
+{
+    //设置友盟社会化组件appkey
+    [UMSocialData setAppKey:UmengAppkey];
+//    [UMSocialData openLog:YES];
+    
+
+    //设置手机QQ 的AppId，Appkey，和分享URL，需要#import "UMSocialQQHandler.h"
+<<<<<<< .mine
+    [UMSocialQQHandler setQQWithAppId:QQAppId appKey:QQAppkey url:kshareUrl];
+=======
+    [UMSocialQQHandler setQQWithAppId:QQAppId appKey:QQAppkey url:@"http://dev.lswebhr.jiaojiebao.com/lindex.html"];
+>>>>>>> .r1671
+    
+    //设置微信AppId、appSecret，分享url
+//    [UMSocialWechatHandler setWXAppId:@"wxd9a39c7122aa6516" appSecret:@"db426a9829e4b49a0dcac7b4162da6b6" url:@"http://www.umeng.com/social"];
+
+    //打开新浪微博的SSO开关，设置新浪微博回调地址，这里必须要和你在新浪微博后台设置的回调地址一致。需要 #import "UMSocialSinaSSOHandler.h"
+//    [UMSocialSinaSSOHandler openNewSinaSSOWithAppKey:@"3921700954"
+//                                                  secret:@"04b48b094faeb16683c32669824ebdad"
+//                                             RedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
+}
+
+-(void)openUmengShare:(UIViewController*)vc;
+{
+    [UMSocialData defaultData].extConfig.qqData.title = @"我们都在使用一号助理";
+    //如果需要分享回调，请将delegate对象设置self，并实现下面的回调方法
+    [UMSocialSnsService presentSnsIconSheetView:vc
+                                         appKey:UmengAppkey
+<<<<<<< .mine
+                                      shareText:kshareTitle
+                                     shareImage:[UIImage imageNamed:@"blank"]
+=======
+                                      shareText:@"http://dev.lswebhr.jiaojiebao.com/lindex.html"
+                                     shareImage:[UIImage imageNamed:@"icon_shared"]
+>>>>>>> .r1671
+                                shareToSnsNames:@[UMShareToSina,UMShareToQQ,UMShareToSms,UMShareToWechatTimeline]
+                                       delegate:self];
+}
+
+#pragma mark - UMSocialUIDelegate Delegate
+//判断分享平台，定制分享内容
+- (void)didSelectSocialPlatform:(NSString *)platformName withSocialData:(UMSocialData *)socialData
+{
+    if ([platformName isEqualToString:UMShareToSms])
+    {
+        socialData.shareImage = nil;
+    }
+    else if ([platformName isEqualToString:UMShareToQQ])
+    {
+        
+    }
+    else if ([platformName isEqualToString:UMShareToSina])
+    {
+        //微博分享没有标题，url跳转事件
+        socialData.shareText = @"新浪微博分享内容,url => www.baidu.com";
+    }
+    
+}
+
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    //根据`responseCode`得到发送结果,如果分享成功
+    if(response.responseCode == UMSResponseCodeSuccess)
+    {
+        //得到分享到的平台名
+        NSLog(@"share to sns name is %@",[[response.data allKeys] objectAtIndex:0]);
+    }
+}
+
+@end

@@ -1,0 +1,15 @@
+//
+//  JPushHelper.h
+//  xingzhengbao
+//
+//  Created by DavyZhang on 16/5/19.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface JPushHelper : NSObject
+
++(void)registerJPush:(NSDictionary *)launchOptions;
+
+@end

@@ -1,0 +1,86 @@
+//
+//  WorkSharedManager.m
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import "WorkSharedManager.h"
+#import <UIKit/UIKit.h>
+
+static WorkSharedManager* _instance = nil;
+
+@implementation WorkSharedManager
+
+@synthesize  _WorkData = m_WorkData;
+@synthesize  _WorkDetail = m_WorkDetail;
+@synthesize  _ScanData = m_ScanData;
+@synthesize  _AddWorkData = m_AddWorkData;
+@synthesize  _AddWorkDetailData = m_AddWorkDetailData;
+@synthesize  _VacationData = m_VacationData;
+@synthesize  _RetroactiveData = m_RetroactiveData;
+@synthesize  _RetroactiveDetailData = m_RetroactiveDetailData;
+@synthesize  _regType = m_regType;
+
+
++(WorkSharedManager*) sharedInstance
+{
+    @synchronized(self)
+    {
+        if(_instance == nil)
+        {
+            _instance = [[WorkSharedManager alloc] init];
+            [_instance initWorkSharedManager];
+        }
+    }
+    return _instance;
+}
+
+-(void) initWorkSharedManager;
+{
+    m_regType = @"0";
+    m_ListUploadImg = [[NSMutableArray alloc] initWithCapacity: 0];
+}
+
+
+
+#pragma mark - 上传图片数据
+-(int) getUploadImgCount
+{
+    int nResult = 0;
+    if(m_ListUploadImg)
+    {
+        nResult = (int)m_ListUploadImg.count;
+    }
+    return nResult;
+}
+
+-(void) clearUploadImgInfo
+{
+    if(m_ListUploadImg)
+    {
+        [m_ListUploadImg removeAllObjects];
+    }
+}
+
+-(void) addUploadImgInfo:(UploadImgData *)info
+{
+    if(info)
+    {
+        [m_ListUploadImg addObject:info];
+    }
+}
+
+-(UploadImgData*) getUploadImgInfoByIndex:(int)nIndex
+{
+    UploadImgData* pResult = nil;
+    if(nIndex >= 0 && nIndex < [self getUploadImgCount])
+    {
+        pResult = [m_ListUploadImg objectAtIndex:(NSInteger)nIndex];
+        
+    }
+    return  pResult;
+}
+
+@end

@@ -1,0 +1,147 @@
+//
+//  LoginManager.m
+//  EMM
+//
+//  Created by xingfengzheng on 15/10/14.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import "EMAccontManager.h"
+
+static EMAccontManager* _instance = nil;
+
+@implementation EMAccontManager
+
+@synthesize _pAccontInfo = m_pAccontInfo;
+
++(EMAccontManager*) sharedInstance
+{
+    @synchronized(self)
+    {
+        if(_instance == nil)
+        {
+            _instance = [[EMAccontManager alloc] init];
+            //初始化数据
+            [_instance InitMgr];
+        }
+    }
+    return _instance;
+}
+
+//设置手机验证码
+-(void) setPhoneCode:(NSString*) strPhone
+{
+    m_strPhoneCode = strPhone;
+}
+
+//获取手机验证吗
+-(NSString*) getPhoneCode
+{
+    return m_strPhoneCode;
+}
+
+//初始化账号管理器
+-(void) InitMgr
+{
+    m_pAccontInfo = [[AccontInf alloc] init];
+    m_arrAccontInfos = [[NSMutableArray alloc] initWithCapacity:0];
+}
+
+//add by zhengxf about "帐号信息的存取" 2015-10-22  ---------begin---------
+
+//设置tags
+-(void) setTags:(NSArray*) arrTags
+{
+    if(m_pAccontInfo)
+    {
+        //[m_pAccontInfo setTags:arrTags];
+    }
+}
+
+//获取tags
+-(NSArray*) getTagsArr
+{
+    NSArray* pResult = nil;
+    if(m_pAccontInfo)
+    {
+        //pResult = [m_pAccontInfo getTagsArr];
+    }
+    return pResult;
+}
+
+//add by zhengxf about "帐号信息的存取" 2015-10-22  ---------end---------
+
+
+
+//add  about "登陆方式" 2016-1-05  ---------start---------
+
+// 存入登陆模式
+-(void)isSacnLogIn:(BOOL)LogInType
+{
+    ScanLogIn = LogInType;
+}
+// 取出登陆模式
+-(BOOL)getIsScanLogIn
+{
+    return ScanLogIn;
+}
+
+//add  about "登陆方式" 2016-1-05  ---------end---------
+
+
+//add  about "跳转方式" 2016-5-18  ---------start---------
+
+// 存入跳转方式
+-(void)isSkipPage:(BOOL)skipPageInType
+{
+    skipPage = skipPageInType;
+}
+// 取出跳转方式
+-(BOOL)getIsSkipPage
+{
+    return skipPage;
+}
+
+//add  about "跳转方式" 2016-5-18  ---------end---------
+
+//获取账号信息的结构体
+-(AccontInf*) getAccontInf
+{
+    return m_pAccontInfo;
+}
+
+-(void)addAccontInfos:(AccontInf*)Inf
+{
+    if (m_arrAccontInfos != nil)
+    {
+        [m_arrAccontInfos addObject:Inf];
+    }
+}
+
+-(void)removeAccontInfos
+{
+    if (m_arrAccontInfos != nil)
+    {
+        [m_arrAccontInfos removeAllObjects];
+    }
+}
+
+-(AccontInf*)getAccontInfoIndex:(int)index
+{
+    if (m_arrAccontInfos != nil && index < [m_arrAccontInfos count])
+    {
+        return [m_arrAccontInfos objectAtIndex:index];
+    }
+    return nil;
+}
+
+-(int)getAccontInfosCount
+{
+    if (m_arrAccontInfos != nil)
+    {
+        return (int)[m_arrAccontInfos count];
+    }
+    return 0;
+}
+
+@end

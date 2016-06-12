@@ -1,0 +1,29 @@
+{
+    "code": "200",
+    "msg": {
+        "couponList": [
+                       {
+                       "sn": "D03125050217407",
+                       "validDate": "2015-10-20--2015-10-31",
+                       "description": "康维他蜂蜜满150减10元",
+                       "state": 0,
+                       "couponPlatform": "全平台",
+                       "couponType": 2,
+                       "couponDisplay": "订单满199减10,订单满299减20",
+                       "isSel": 1,
+                       "activeUrl": "http://www.gou.com"
+                       },
+                       {
+                       "sn": "D03125050217407",
+                       "validDate": "2015-10-20--2015-10-31",
+                       "description": "康维他蜂蜜满150减10元",
+                       "state": 0,
+                       "couponPlatform": "全平台",
+                       "couponType": 2,
+                       "couponDisplay": "订单满199减10,订单满299减20",
+                       "isSel": 2,
+                       "activeUrl": "http://www.gou.com"
+                       }
+                       ]
+    }
+}

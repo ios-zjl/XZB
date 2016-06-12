@@ -1,0 +1,65 @@
+//
+//  WorkSharedManager.h
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "WorkInfo.h"
+
+@interface WorkSharedManager : NSObject
+{
+    NSMutableArray* m_ListUploadImg;             //上传图片数据
+    
+    // 上下班 数据
+    WorkData *m_WorkData;
+    // 上下班 组长审批详情
+    WorkDataDetail *m_WorkDetail;
+    // 二维码扫描数据
+    ScanData *m_ScanData;
+    // 加班 数据
+    AddWorkData *m_AddWorkData;
+    // 加班 组长审批详情 数据
+    AddWorkDetailData *m_AddWorkDetailData;
+    // 请假 数据
+    VacationData *m_VacationData;
+    // 补签 数据
+    RetroactiveData *m_RetroactiveData;
+    // 补签审核详情 数据
+    RetroactiveDetailData *m_RetroactiveDetailData;
+    
+    // 在线签到上下班状态
+    NSString *m_regType; //1.上班 2.下班 3.不可用
+}
+
+@property(nonatomic,strong)WorkData*            _WorkData;
+@property(nonatomic,strong)WorkDataDetail*      _WorkDetail;
+@property(nonatomic,strong)ScanData*            _ScanData;
+@property(nonatomic,strong)AddWorkData*         _AddWorkData;
+@property(nonatomic,strong)AddWorkDetailData*   _AddWorkDetailData;
+@property(nonatomic,strong)VacationData*        _VacationData;
+@property(nonatomic,strong)RetroactiveData*     _RetroactiveData;
+@property(nonatomic,strong)RetroactiveDetailData* _RetroactiveDetailData;
+@property(nonatomic,strong)NSString *_regType;
+
++(WorkSharedManager*) sharedInstance;
+
+//初始化数据队列
+-(void) initWorkSharedManager;
+
+
+#pragma mark - 上传图片数据
+//获取个数
+-(int) getUploadImgCount;
+//清空全部数据
+-(void) clearUploadImgInfo;
+//添加
+-(void) addUploadImgInfo:(UploadImgData*) info;
+//根据编号获取
+-(UploadImgData*) getUploadImgInfoByIndex:(int) nIndex;
+
+
+
+@end

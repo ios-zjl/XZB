@@ -1,0 +1,45 @@
+{
+    "code": "1200",
+    "msg": {
+        "goodsList": [
+            {
+                "goodsId": 26620,
+                "goodsStockDetailId": 81706,
+                "isGroup": 0,
+                "goodsName": "乐高 10696经典创意中号积木盒益智拼搭（4岁以上）",
+                "price": "288",
+                "defaultPhotoUrl": "http://file4.m6go.com/VqFEwRWCa4UkzII9TjgAvt/44",
+                "browseTime": "2016-03-08 00:00:00",
+ "discount": "5折",
+                "status": 0,
+                "classId": 10
+            },
+            {
+                "goodsId": 4741,
+                "goodsStockDetailId": 6412,
+                "isGroup": 0,
+                "goodsName": "【无毒环保】美国小泰克Little tikes发现遥控器",
+                "price": "69",
+                "defaultPhotoUrl": "http://file.m6go.com/5c5SfIFaXOqHGXRK6i5E__/44",
+                "browseTime": "2016-07-08 00:00:00",
+ "discount": "5折",
+                "status": 0,
+                "classId": 10
+
+            },
+            {
+                "goodsId": 13812,
+                "isGroup": 0,
+                "goodsStockDetailId": 17048,
+                "goodsName": "世纪宝贝Babyhood宝宝洗澡玩具套装",
+                "price": "25",
+                "defaultPhotoUrl": "http://file.m6go.com/oL9q54mqQ4qMXzKNukCthW/44",
+                "browseTime": "2015-03-08 00:00:00",
+ "discount": "5折",
+                "status": 0,
+                "classId": 10
+
+            }
+        ]
+    }
+}

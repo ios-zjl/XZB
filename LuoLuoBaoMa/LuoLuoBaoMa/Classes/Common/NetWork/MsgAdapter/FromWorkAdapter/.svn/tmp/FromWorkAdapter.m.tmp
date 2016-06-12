@@ -1,0 +1,430 @@
+//
+//  FromWorkAdapter.m
+//  xingzhengbao
+//
+//  Created by specter on 16/3/29.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import "FromWorkAdapter.h"
+#import "HttpConnectMgr.h"
+#import "NoticeDef.h"
+#import "SVProgressHUD.h"
+#import "WorkInfo.h"
+#import "WorkSharedConstructor.h"
+#import "WorkSharedManager.h"
+#import "WorkSharedParser.h"
+
+@implementation FromWorkAdapter
+
+
++ (FromWorkAdapter *)sharedInstance
+{
+    static dispatch_once_t once;
+    static FromWorkAdapter * sharedAdapter = nil;
+    dispatch_once(&once, ^{
+        sharedAdapter = [[FromWorkAdapter alloc]init];
+    });
+    return sharedAdapter;
+}
+
+-(void) msgC2S_Register:(NSString *)tokenid Data:(WorkInfo*)pWorkInfo
+{
+   
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pWorkInfo._strType forKey:@"type"];
+    [body setObject:pWorkInfo._lLng forKey:@"lng"];
+    [body setObject:pWorkInfo._lLat forKey:@"lat"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_Register andBody:body
+                         withSuccessBlock:^(NSDictionary *dict)
+    {
+        NSString * code = [dict objectForKey:@"code"];
+        if ([code isEqualToString:@"000000"])
+        {
+            NSDictionary* data = [dict objectForKey:@"data"];
+            if (data)
+            {
+                WorkData* pWorkData = [[WorkData alloc] init];
+                if(pWorkData)
+                {
+                    pWorkData._strRecordId = [data objectForKey:@"recordId"];
+                    pWorkData._strStartTime = [data objectForKey:@"startTime"];
+                    pWorkData._strEndTime = [data objectForKey:@"endTime"];
+                    pWorkData._strType = [data objectForKey:@"type"];
+                    pWorkData._strIdSign = [data objectForKey:@"idSign"];
+                    [WorkSharedManager sharedInstance]._WorkData = pWorkData;
+                    [[NSNotificationCenter  defaultCenter] postNotificationName:NT_REGISTER object:nil];
+                    [SVProgressHUD dismiss];
+                }
+            }
+        }
+        else
+        {
+            [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+        }
+    } withFailBlock:^(NSError *error)
+    {
+        //[SVProgressHUD dismiss];
+    }];
+}
+
+-(void) msgC2S_RegisterDetail:(NSString *)tokenid registerid:(NSString *)regid idSign:(NSString *) signid
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:regid forKey:@"recordId"];
+    [body setObject:signid forKey:@"idSign"];
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_RegisterDetail andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSDictionary* data = [dict objectForKey:@"data"];
+             if (data)
+             {
+                 WorkDataDetail* pWorkDetail = [[WorkDataDetail alloc] init];
+                 if(pWorkDetail)
+                 {
+                     pWorkDetail._strRecordId = [data objectForKey:@"recordId"];
+                     pWorkDetail._strUserName = [data objectForKey:@"userName"];
+                     pWorkDetail._strSysStartTime= [data objectForKey:@"sysStartTime"];
+                     pWorkDetail._strSysEndTime = [data objectForKey:@"sysEndTime"];
+                     pWorkDetail._strType = [data objectForKey:@"type"];
+                     pWorkDetail._strCreateTime = [data objectForKey:@"createTime"];
+                     [WorkSharedManager sharedInstance]._WorkDetail = pWorkDetail;
+                     [[NSNotificationCenter  defaultCenter] postNotificationName:NT_REGISTER_DETAIL object:nil];
+                     [SVProgressHUD dismiss];
+                 }
+             }
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //[SVProgressHUD dismiss];
+     }];
+}
+
+-(void) msgC2S_RegisterApply:(NSString *)tokenid Data:(WorkApplyInfo*)pWorkApplyInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pWorkApplyInfo._strRecordId forKey:@"recordId"];
+    [body setObject:pWorkApplyInfo._strOutTime forKey:@"outTime"];
+    [body setObject:pWorkApplyInfo._strPass forKey:@"pass"];
+    [body setObject:pWorkApplyInfo._strIdSign forKey:@"idSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_RegisterApply andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+            [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+            [[NSNotificationCenter  defaultCenter] postNotificationName:NT_REGISTER_APPLY object:nil];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+         
+     } withFailBlock:^(NSError *error)
+     {
+//         [SVProgressHUD dismissWithError:error];
+     }];
+}
+
+-(void) msgC2S_AddWork:(NSString *)tokenid Data:(AddWorkInfo*)pAddApplyInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pAddApplyInfo._strStartTime forKey:@"startTime"];
+    [body setObject:pAddApplyInfo._strEndTime forKey:@"endTime"];
+    [body setObject:pAddApplyInfo._strLng forKey:@"lng"];
+    [body setObject:pAddApplyInfo._strLat forKey:@"lat"];
+    [body setObject:pAddApplyInfo._strTime forKey:@"time"];
+    [body setObject:pAddApplyInfo._strMsg forKey:@"msg"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_AddWork andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSDictionary* data = [dict objectForKey:@"data"];
+             if (data)
+             {
+                 AddWorkData *pAddWorkData = [[AddWorkData alloc] init];
+                 if (pAddWorkData)
+                 {
+                     pAddWorkData._strType = [data objectForKey:@"type"];
+                     pAddWorkData._strRecordId = [data objectForKey:@"recordId"];
+                     pAddWorkData._strIdSign = [data objectForKey:@"idSign"];
+                     [WorkSharedManager sharedInstance]._AddWorkData = pAddWorkData;
+                     [[NSNotificationCenter  defaultCenter] postNotificationName:NT_ADDWORK object:nil];
+                     [SVProgressHUD dismiss];
+                 }
+             }
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+         
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+     }];
+}
+
+-(void) msgC2S_AddWorkDetail:(NSString *)tokenid addWorkid:(NSString *)awkid idSign:(NSString *) signid
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:awkid forKey:@"addWorkId"];
+    [body setObject:signid forKey:@"idSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_AddWorkDetail andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSDictionary* data = [dict objectForKey:@"data"];
+             if (data)
+             {
+                 AddWorkDetailData *pAddWorkDetailData = [[AddWorkDetailData alloc] init];
+                 if (pAddWorkDetailData)
+                 {
+                     pAddWorkDetailData._strRecordId = [data objectForKey:@"recordId"];
+                     pAddWorkDetailData._strStartTime = [data objectForKey:@"startTime"];
+                     pAddWorkDetailData._strEndTime = [data objectForKey:@"endTime"];
+                     pAddWorkDetailData._strMsg = [data objectForKey:@"msg"];
+                     pAddWorkDetailData._strUserName = [data objectForKey:@"userName"];
+                     pAddWorkDetailData._strTime = [data objectForKey:@"time"];
+                     pAddWorkDetailData._strType = [data objectForKey:@"type"];
+                     pAddWorkDetailData._strCreateTime = [data objectForKey:@"createTime"];
+                     [WorkSharedManager sharedInstance]._AddWorkDetailData = pAddWorkDetailData;
+                     [[NSNotificationCenter  defaultCenter] postNotificationName:NT_ADDWORK_DETAIL object:nil];
+                     [SVProgressHUD dismiss];
+                 }
+             }
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+-(void) msgC2S_AddWorkApply:(NSString *)tokenid Data:(AddWorkApplyInfo*)pAddWorkApplyInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pAddWorkApplyInfo._strAddWorkId forKey:@"addWorkId"];
+    [body setObject:pAddWorkApplyInfo._strPass forKey:@"pass"];
+    [body setObject:pAddWorkApplyInfo._strIdSign forKey:@"idSign"];
+
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_AddWorkApply andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+             [[NSNotificationCenter  defaultCenter] postNotificationName:NT_ADDWORK_APPLY object:nil];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+-(void) msgC2S_Vacation:(NSString *)tokenid Data:(VacationInfo*)pVacationInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pVacationInfo._strStartTime forKey:@"startTime"];
+    [body setObject:pVacationInfo._strEndTime forKey:@"endTime"];
+    [body setObject:pVacationInfo._strLng forKey:@"lng"];
+    [body setObject:pVacationInfo._strLat forKey:@"lat"];
+    [body setObject:pVacationInfo._strType forKey:@"typeName"];
+    [body setObject:pVacationInfo._strMsg forKey:@"msg"];
+    [body setObject:pVacationInfo._strLeadPhone forKey:@"leadPhone"];
+
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_Vacation andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSDictionary* data = [dict objectForKey:@"data"];
+             if (data)
+             {
+                 VacationData *pVacationData = [[VacationData alloc] init];
+                 if (pVacationData)
+                 {
+                     pVacationData._strVacationId = [data objectForKey:@"vacationId"];
+                     pVacationData._strIdSign = [data objectForKey:@"idSign"];
+                     [WorkSharedManager sharedInstance]._VacationData = pVacationData;
+                     [[NSNotificationCenter  defaultCenter] postNotificationName:NT_VACATION object:nil];
+//                     [SVProgressHUD dismiss];
+                     [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+                 }
+             }
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+-(void) msgC2S_VacationApply:(NSString *)tokenid Data:(VacationApplyInfo*)pVacationApplyInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pVacationApplyInfo._strVacationId forKey:@"vacationId"];
+    [body setObject:pVacationApplyInfo._strPass forKey:@"pass"];
+    [body setObject:pVacationApplyInfo._strIdSign forKey:@"idSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_VacationApply andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+             [[NSNotificationCenter  defaultCenter] postNotificationName:NT_VACATION_APPLY object:nil];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+-(void) msgC2S_NextApply:(NSString *)tokenid Data:(VacationApplyInfo*)pApplyInfo
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:pApplyInfo._strVacationId forKey:@"vacationId"];
+    [body setObject:pApplyInfo._strPass forKey:@"pass"];
+    [body setObject:pApplyInfo._strIdSign forKey:@"idSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_NextApply andBody:body withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+             [[NSNotificationCenter  defaultCenter] postNotificationName:NT_NEXTAPPLY object:nil];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+
+#pragma mark - 迟到/早退
+
+//-(void) msgC2S_WorkOutTimeApply:(NSString *)tokenid dict:(NSDictionary *)dict
+- (void)msgC2S_WorkOutTimeApply:(NSString *)tokenid typeId:(int)typeId dict:(NSDictionary *)dict
+{
+//    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+//    [body setObject:tokenid forKey:@"token"];
+//    [body setObject:pApplyInfo._strVacationId forKey:@"vacationId"];
+//    [body setObject:pApplyInfo._strState forKey:@"state"];
+//    [body setObject:pApplyInfo._strIdSign forKey:@"idSign"];
+    MLog(@" dict :%@   type :%@",dict,[dict objectForKey:@"type"]);
+//    [dict setObject:[dict objectForKey:@"5"] forKey:@"typeId"];
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_outTime andBody:dict withSuccessBlock:^(NSDictionary *dict)
+     {
+         
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             MLog(@" 请求成功数据 ：%@",dict);
+             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+             NSDictionary *dictData = [dict objectForKey:@"data"];
+             if (typeId==5) { // 迟到
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_LateWork object:dictData];
+             }else{// 早退
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_LEAVEEARLY object:dictData];
+             } 
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         //         [SVProgressHUD dismissWithError:error];
+         MLog(@" error:%@",[error description] );
+     }];
+}
+
+#pragma mark - 迟到 详情
+-(void) msgC2S_WorkoutTimeDetail:(NSString *)tokenid outTimeId:(NSString *)outTimeId idSign:(NSString *)idSign
+{
+    NSMutableDictionary *pms=[NSMutableDictionary dictionary];
+    [pms setObject:[GlobalHelper getValueByUserDefault:USER_TOEKN] forKey:@"token"];
+    [pms setObject:outTimeId forKey:@"recordId"];
+    [pms setObject:idSign forKey:@"idSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_outTimeDetail andBody:pms withSuccessBlock:^(NSDictionary *dict)
+     {
+         
+//         NSString * code = [dict objectForKey:@"code"];
+//         if ([code isEqualToString:@"000000"])
+//         {
+             MLog(@" 迟到早退详情 请求成功数据 ：%@",dict);
+             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+             [[NSNotificationCenter  defaultCenter] postNotificationName:NT_LATEWORK_APPLY object:[dict objectForKey:@"data"]];
+//         }
+//         else
+//         {
+//             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+//         }
+     } withFailBlock:^(NSError *error)
+     {
+         [SVProgressHUD dismissWithError:[error description]];
+     }];
+}
+
+
+
+
+@end

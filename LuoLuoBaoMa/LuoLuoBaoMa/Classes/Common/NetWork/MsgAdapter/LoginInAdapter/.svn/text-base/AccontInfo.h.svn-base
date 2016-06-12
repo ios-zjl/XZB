@@ -1,0 +1,66 @@
+//
+//  LonginInfo.h
+//  EMM
+//
+//  Created by xingfengzheng on 15/10/14.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+
+//应用信息的结构类
+@interface AccontInf : NSObject
+{
+    NSString * m_tokenId;       //tokenId
+    NSString * m_strState;      //是否是新用户
+    NSString * m_strData;       //返回结果参数json
+    NSString * m_strUserName;   //用户名
+    NSString * m_strSex;        //性别
+    NSString * m_strBirthday;   //生日
+    NSString * m_strAddr;       //地址
+    NSString * m_strHeading;    //头像
+    NSString * m_strBranch;     //部门
+    NSString * m_strJob;        //职位
+    NSString * m_strOpenId;     //企业id
+    NSString * m_strCompany;    //公司logo
+    NSString * m_strCompanyName;//公司名称
+    NSString * m_strJobNum;     //工号
+    
+    NSString * m_strCreateTime;// 更新时间
+    NSString * m_strPhone;// 手机号码
+    NSString * m_strEmail;//邮箱
+    NSMutableArray  * m_ArrVacationType;//请假事项
+    NSMutableArray  * m_PieceType;//工序
+
+    NSString * m_strIsShow;//1、显示加入企业 2、不显示加入企业
+    NSString * m_strIsAdmin;//1、普通员工 2、管理员
+
+}
+
+@property(nonatomic,strong) NSString *    _tokenId;   //tokenId
+@property(nonatomic,strong) NSString *    _strState;   //是否是新用户
+@property(nonatomic,strong) NSString *    _strData;   //返回结果参数json
+@property(nonatomic,strong) NSString *    _strUserName;   //用户名
+@property(nonatomic,strong) NSString *    _strSex;        //性别
+@property(nonatomic,strong) NSString *    _strBirthday;   //生日
+@property(nonatomic,strong) NSString *    _strAddr;       //地址
+@property(nonatomic,strong) NSString *    _strHeading;    //头像
+@property(nonatomic,strong) NSString *    _strBranch;     //部门
+@property(nonatomic,strong) NSString *    _strJob;        //职位
+@property(nonatomic,strong) NSString *    _strOpenId;     //企业id
+@property(nonatomic,strong) NSString *    _strCompany;    //公司logo
+@property(nonatomic,strong) NSString *    _strCompanyName;//公司名称
+@property(nonatomic,strong) NSString *    _strJobNum;     //工号
+
+@property(nonatomic,strong) NSString *    _strCreateTime; // 创建时间
+@property(nonatomic,strong) NSString *    _strPhone; // 手机号
+@property(nonatomic,strong) NSString *    _strEmail;//邮箱
+@property(nonatomic,strong) NSMutableArray  *    _arrvacationType;//请假事项
+@property(nonatomic,strong) NSMutableArray  *    _pieceType;//工序
+@property(nonatomic,strong) NSString *    _strIsShow;//1、显示加入企业 2、不显示加入企业
+@property(nonatomic,strong) NSString *    _strIsAdmin;//1、普通员工 2、管理员
+
+@end
+
+

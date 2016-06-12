@@ -1,0 +1,56 @@
+{
+    "code": "1200",
+    "msg": {
+        "isShowtips": 1,
+        "tips": "客服工作时间：周一至周日 8:00-24:00（节假日会有适当变化）（节假日会有适当变化）",
+        "problemModule": [
+                          {
+                          "modularTitle": "常见问题",
+                          "img": "http://file.m6go.com/xxxxxxx",
+                          "subTitle": "各种常见问题，帮你迅速了解麦乐购",
+                          "dataType": 3,
+                          "dataValue": "http://appweb.gou.com/xxxxx"
+                          },
+                          {
+                          "modularTitle": "产品意见反馈",
+                          "img": "http://file.m6go.com/xxxxxxx",
+                          "subTitle": "APP使用问题、功能建议和系统问题，欢迎吐槽",
+                          "dataType": 8,
+                          "dataValue": ""
+                          }
+                          ],
+        "customerServiceModule": {
+            "title": "在线客服",
+            "modularList": [
+                            {
+                            "modularTitle": "售前问题",
+                            "img": "http://file.m6go.com/xxxxxxx",
+                            "subTitle": "优惠活动、选购商品、注册登录、支付问题等",
+                            "dataType": 3,
+                            "dataValue": "http://appweb.gou.com/xxxxx"
+                            },
+                            {
+                            "modularTitle": "售后问题",
+                            "img": "http://file.m6go.com/xxxxxxx",
+                            "subTitle": "订单修改、物流查询、售后服务、退款操作等",
+                            "dataType": 3,
+                            "dataValue": "http://appweb.gou.com/xxxxx"
+                            }
+                            ],
+            "customerServiceMobile": {
+                "modularTitle": "客服电话",
+                "img": "http://file.m6go.com/xxxxxxx",
+                "subTitle": "",
+                "dataType": 9,
+                "dataValue": "4006666600"
+            }
+        },
+        "otherModule": [
+                        "http://file.m6go.com/93mqPIZB_OEIEMVCRRjwqp/44",
+                        "http://file.m6go.com/lytJb8kXo4U1RegFmV0g4s/44",
+                        "http://file.m6go.com/93mqPIZB_OEIEMVCRRjwqp/44",
+                        "http://file.m6go.com/93mqPIZB_OEIEMVCRRjwqp/44",
+                        "http://file.m6go.com/93mqPIZB_OEIEMVCRRjwqp/44"
+                        ]
+    }
+}

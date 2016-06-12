@@ -1,0 +1,111 @@
+//
+//  EMLoginAdapter.h
+//  EMM
+//
+//  Created by xingfengzheng on 15/10/14.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+//#import "NetDef.h"
+#import "NoticeDef.h"
+#import "EMAccontManager.h"
+#import "Common.h"
+
+//上传文件
+//#define JJB_upload  [NSString stringWithFormat:@"%@/upload",_APPSERVER_IP]
+
+//获取手机验证码--登录
+#define XZB_GetSmsCode  [NSString stringWithFormat:@"%@/getSmsCode",_APPSERVER_IP]
+
+//获取手机验证码--创建企业
+#define XZB_Create_Get_Sms_Code  [NSString stringWithFormat:@"%@/CreateGetSmsCode",_APPSERVER_IP]
+
+//用户登录
+#define XZB_login  [NSString stringWithFormat:@"%@/login",_APPSERVER_IP]
+
+//设置首次个人资料
+#define XZB_Setmsg  [NSString stringWithFormat:@"%@/setMsg",_APPSERVER_IP]
+
+//修改名字--待修改
+#define XZB_EditName  [NSString stringWithFormat:@"%@/editName",_APPSERVER_IP]
+
+//修改电话--待修改
+#define XZB_EditPhone  [NSString stringWithFormat:@"%@/editPhone",_APPSERVER_IP]
+
+//上传文件--待修改
+#define XZB_UpdateFile  [NSString stringWithFormat:@"%@/UpdateFile",_APPSERVER_IP]
+
+//上传文件--待修改
+#define XZB_UpdateHeading  [NSString stringWithFormat:@"%@/UpdateFile",_APPSERVER_IP]
+
+//退出登录
+#define JJB_logout  [NSString stringWithFormat:@"%@/account/logout",_APPSERVER_IP]
+
+//验证token
+#define JJB_tokenValidate  [NSString stringWithFormat:@"%@/account/tokenValidate",_APPSERVER_IP]
+
+//会员变更纪录
+#define JJB_record  [NSString stringWithFormat:@"%@/account/member/record",_APPSERVER_IP]
+
+//位置信息上传
+#define JJB_position  [NSString stringWithFormat:@"%@/account/position",_APPSERVER_IP]
+
+//创建企业
+#define XZB_createCompany  [NSString stringWithFormat:@"%@/createCompany",_APPSERVER_IP]
+
+//添加联系人
+#define XZB_addUser  [NSString stringWithFormat:@"%@/addUser",_APPSERVER_IP]
+
+@interface EMLoginAdapter : NSObject
+
++(EMLoginAdapter*) sharedInstance;
+
+#pragma mark -
+#pragma mark 登录命令registrationID
+
+//获取手机验证码
+-(void) msgC2S_CodePhone:(NSString*) strPhone;
+
+#pragma mark   获取手机验证码-创建企业
+-(void) msgC2S_CodePhoneAboutCompany:(NSString*)strPhone;
+//登录
+-(void) msgC2S_Login:(NSString*) strPhone code:(NSString*) strCode;
+////退出登录
+//-(void) msgC2S_Logout:(NSString*) strTokenId;
+
+//设置首次个人资料--有姓名参数
+-(void) msgC2S_updateTokenId:(NSString*) strTokenId userName:(NSString *)strUserName companyId:(NSString *)strComponyId;//原版有姓名
+
+//设置首次个人资料--无姓名参数
+//-(void) msgC2S_updateTokenId:(NSString*) strTokenId companyId:(NSString *)strComponyId;
+
+
+//修改名字--待更改<接口名字待修改>
+-(void) msgC2S_updateName:(NSString*) strTokenId name:(NSString*)strName;
+
+//修改电话--待更改<接口名字待修改>
+-(void) msgC2S_EditPhoneWithTokenID:(NSString*) strTokenId phone:(NSString*)strPhone;
+
+//修改头像
+-(void) msgC2S_UpdateImg:(NSData *)imgData;
+
+//二维码web登陆
+-(void) msgC2S_QrCodeLogin:(NSString*)URL tokenId:(NSString *)tokenid;
+////验证token
+//-(void) msgC2S_tokenValidate:(NSString*) strTokenId;
+//
+////会员变更纪录
+//-(void) msgC2S_record:(NSString*) strTokenId;
+//
+////位置信息上传
+//-(void) msgC2S_position:(NSString*) strTokenId lng:(NSString*)strLng lat:(NSString*) strLat;
+//add By Aggie About "创建企业"-------2016.5.13-----start ---------------
+-(void) msgC2S_CreatCompanyWithCompanyName:(NSString*)strCompanyName userName:(NSString*)strUserName phone:(NSString *)strPhone smsCode:(NSString *)strSmsCode email:(NSString *)strEmail;
+//add By Aggie About "创建企业"-------2016.5.13-----end---------------
+
+//add By Aggie About "企业添加联系人"-------2016.5.13-----start ---------------
+- (void)msgC2S_AddPersonWithtokenId:(NSString *)tokenid Data:(NSMutableArray *)arrData;
+//add By Aggie About "企业添加联系人"-------2016.5.13-----end---------------
+
+@end

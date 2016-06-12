@@ -1,0 +1,962 @@
+//
+//  EMLoginAdapter.m
+//  EMM
+//
+//  Created by xingfengzheng on 15/10/14.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+
+#import "EMLoginAdapter.h"
+#import "HttpConnectMgr.h"
+#import "EMAccontManager.h"
+//#import "EMLoginConstructor.h"
+//#import "EMLoginParser.h"
+//#import "Public.h"
+#import "AppDelegate.h"
+//#import "APService.h"
+#import "SVProgressHUD.h"
+//#import "YTKKeyValueStore.h"
+#import "EMAccontManager.h"
+#import "AccontInfo.h"
+#import "FileManager.h"
+#import "SVProgressHUD.h"
+#import "SysConfigModel.h"
+#import "CompanyInfoModel.h"
+#import "WorkInfo.h"
+
+
+static EMLoginAdapter* _instance = nil;
+@implementation EMLoginAdapter
+
++(EMLoginAdapter*) sharedInstance
+{
+    @synchronized(self)
+    {
+        if(_instance == nil)
+        {
+            _instance = [[EMLoginAdapter alloc] init];
+        }
+        
+    }
+    
+    return _instance;
+}
+
+#pragma mark   获取手机验证码-登录
+-(void) msgC2S_CodePhone:(NSString*)strPhone
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strPhone forKey:@"phone"];
+//    [body setObject:[NSString stringWithFormat:@"%d",nType] forKey:@"type"];
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_GetSmsCode andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 // data字典
+                 NSDictionary *dataDic = [dict objectForKey:@"data"];
+                 NSString *phone = [dataDic objectForKey:@"phone"];
+                 NSString *smsCode = [dataDic objectForKey:@"smsCode"];
+                 // 将手机号码和验证码保存到本地
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phoneCode"];
+                 [[NSUserDefaults standardUserDefaults] setObject:smsCode forKey:@"smsCodeCode"];
+                 [SVProgressHUD showSuccessWithStatus:@"已将验证码发送至您的手机"];
+                 //通知界面完成
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_GET_SMS_CODE object:nil];
+
+                 
+             }
+             else
+             {
+                 [SVProgressHUD showErrorWithStatus:[dict objectForKey:@"msg"]];
+             }
+       
+         }
+         withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         ];
+    }
+
+}
+
+#pragma mark   获取手机验证码-创建企业
+-(void) msgC2S_CodePhoneAboutCompany:(NSString*)strPhone
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strPhone forKey:@"phone"];
+    //    [body setObject:[NSString stringWithFormat:@"%d",nType] forKey:@"type"];
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_Create_Get_Sms_Code andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 // data字典
+                 NSDictionary *dataDic = [dict objectForKey:@"data"];
+                 NSString *phone = [dataDic objectForKey:@"phone"];
+                 NSString *smsCode = [dataDic objectForKey:@"smsCode"];
+                 // 将手机号码和验证码保存到本地
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phoneCode"];
+                 [[NSUserDefaults standardUserDefaults] setObject:smsCode forKey:@"smsCodeCode"];
+                 [SVProgressHUD showSuccessWithStatus:@"已将验证码发送至您的手机"];
+                 //通知界面完成
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_CREAT_GET_SMS_CODE object:nil];
+                 
+                 
+             }
+             else
+             {
+                 [SVProgressHUD showErrorWithStatus:[dict objectForKey:@"msg"]];
+             }
+             
+         }
+                                withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         ];
+    }
+    
+}
+
+
+
+#pragma mark 登录命令
+//登录网络请求发送   －－－－－－－begin----------
+//登录
+ -(void) msgC2S_Login:(NSString*) strPhone code:(NSString*) strCode
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strPhone forKey:@"phone"];
+    [body setObject:strCode forKey:@"smsCode"];
+//    [body setObject:@"ios" forKey:@"systemType"];  // 当前设备类型  便于后台接口端   处理
+
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_login andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+//             NSString * result = [dict objectForKey:@"code"];
+//             if([result isEqualToString:@"000000"]) //请求成功
+//             {
+                 [[FileManager sharedInstance] saveUserName:strPhone];
+                 [[FileManager sharedInstance] savePassword:strCode];
+                 //存储token
+                 //存储tokenId
+                 [[EMAccontManager sharedInstance] getAccontInf]._tokenId = [dict objectForKey:@"token"];
+                 // 存储data
+                 NSDictionary *dataDict = [[NSDictionary alloc] init];
+                 dataDict = [dict objectForKey:@"data"];
+                 //缓存用户数据
+                 MLog(@"用户数据：%@",dataDict);
+                 [GlobalHelper SetDictIntoStore:dataDict key:kkey_userInfo storeName:ktbl_userInfo];
+                 // USER_NAME 写入 udf
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"userName"] andKey:USER_NAME];
+                 // 极光推送别名
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"alias"] andKey:USER_ALIAS];
+                // 极光推送- 标签
+                [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"tag"] andKey:USER_TAGS];
+                 //是否是新用户--新用户就跳转到注册界面
+                [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"isSet"] andKey:USER_IsSet];
+             if ([dataDict.allKeys containsObject:@"sysConfig"]) {
+                 [SysConfigModel clearTable];
+                 [CompanyInfoModel clearTable];
+                 SysConfigModel *sysModel = [[SysConfigModel alloc]initWithDict:[dataDict objectForKey:@"sysConfig"]];
+                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                     [sysModel save];
+                     [CompanyInfoModel saveObjects:sysModel.companyList];
+                 });
+             }  
+             
+                 [[EMAccontManager sharedInstance] getAccontInf]._strState = [dataDict objectForKey:@"isSet"];
+                 //用户名
+                 [[EMAccontManager sharedInstance] getAccontInf]._strUserName = [dataDict objectForKey:@"userName"];
+                 //性别
+                 [[EMAccontManager sharedInstance] getAccontInf]._strSex = [dataDict objectForKey:@"sex"];
+                 //生日
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBirthday = [dataDict objectForKey:@"birthday"];
+                 //地址
+                 [[EMAccontManager sharedInstance] getAccontInf]._strAddr = [dataDict objectForKey:@"addr"];
+                 //头像
+                 [[EMAccontManager sharedInstance] getAccontInf]._strHeading = [dataDict objectForKey:@"headimg"];
+                 //部门
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBranch = [dataDict objectForKey:@"branch"];
+                 //职位
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJob = [dataDict objectForKey:@"job"];
+                 //企业id
+//                 [[EMAccontManager sharedInstance] getAccontInf]._strOpenId = [dataDict objectForKey:@"openId"];
+                 //公司logo
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompany = [dataDict objectForKey:@"companyLogo"];
+                 //公司名称
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompanyName = [dataDict objectForKey:@"companyName"];
+                 //工号
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJobNum = [dataDict objectForKey:@"jobNum"];
+                 //1、显示加入企业 2、不显示加入企业
+                 [[EMAccontManager sharedInstance] getAccontInf]._strIsShow = [dataDict objectForKey:@"isShow"];
+                 //1、普通员工 2、管理员
+              [[EMAccontManager sharedInstance] getAccontInf]._strIsShow = [dataDict objectForKey:@"isAdmin"];
+             // 存到本地 1、显示加入企业 2、不显示加入企业
+             [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"isShow"] andKey:USER_IsShow];
+             // 存到本地 1、普通员工 2、管理员
+             [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"isAdmin"] andKey:USER_IsAdmin];
+
+                 //通知界面完成
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_LOGIN_COMPLETE object:nil];
+                 [SVProgressHUD dismiss];
+//             }
+//             else //返回错误码
+//             {
+//                 NSString *msg = [dict objectForKey:@"msg"];
+//                 if(msg)
+//                 {
+//                     if([msg isEqualToString:@"参数为空"])
+//                     {
+//                         [SVProgressHUD showWithStr:@"请确认通知和允许位置访问功能，是否打开!"];
+//                     }
+//                     else
+//                     {
+//                         [SVProgressHUD showWithStr:msg];
+//                     }
+//                 }
+//                 
+//             }
+             
+             
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         ];
+    }
+}
+
+
+
+ //---------add By Aggie about "设置首次个人资料--有姓名的参数" ----start-------
+
+-(void) msgC2S_updateTokenId:(NSString*) strTokenId userName:(NSString *)strUserName companyId:(NSString *)strComponyId
+{
+    // 创建data字典
+//    NSMutableDictionary *dataDict = [[NSMutableDictionary alloc] initWithCapacity:0];
+//    [dataDict setObject:strUserName forKey:@"userName"];
+//    [dataDict setObject:strComponyId forKey:@"companyId"];
+    //创建大字典
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"token"];
+    [body setObject:strUserName forKey:@"userName"];
+    [body setObject:strComponyId forKey:@"companyId"];
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_Setmsg andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 [SVProgressHUD showSuccessWithStatus:@"企业设置成功"];
+                 //通知界面更新
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZB_SETMSG object:nil];
+                 //更新个人资料=========== zjl 04-05 =================
+                 // 存储data
+                 NSDictionary *dataDict = [[NSDictionary alloc] init];
+                 dataDict = [dict objectForKey:@"data"];
+                 //缓存用户数据
+                 MLog(@"用户数据：%@",dataDict);
+                 [GlobalHelper SetDictIntoStore:dataDict key:kkey_userInfo storeName:ktbl_userInfo];
+                 //// 极光推送别名
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"alias"] andKey:USER_ALIAS];
+                //// 极光推送标签
+                [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"tag"] andKey:USER_TAGS];
+                 //手机号
+                 [[FileManager sharedInstance] saveUserDefault:[dataDict objectForKey:@"phone"] NSString:USER_PHONE];
+                 [[EMAccontManager sharedInstance] getAccontInf]._strPhone = [dataDict objectForKey:@"phone"];
+                 //用户名
+                 [[EMAccontManager sharedInstance] getAccontInf]._strUserName = [dataDict objectForKey:@"userName"];
+//                  USER_NAME 写入 udf
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"userName"] andKey:USER_NAME];
+                 //性别
+                 [[EMAccontManager sharedInstance] getAccontInf]._strSex = [dataDict objectForKey:@"sex"];
+                 //生日
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBirthday = [dataDict objectForKey:@"birthday"];
+                 //地址
+                 [[EMAccontManager sharedInstance] getAccontInf]._strAddr = [dataDict objectForKey:@"addr"];
+                 //头像
+                 [[EMAccontManager sharedInstance] getAccontInf]._strHeading = [dataDict objectForKey:@"headimg"];
+                 //部门
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBranch = [dataDict objectForKey:@"branch"];
+                 //职位
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJob = [dataDict objectForKey:@"job"];
+                 // 设置时间
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCreateTime = [dataDict objectForKey:@"createTime"];
+                 //企业id
+//                 [[EMAccontManager sharedInstance] getAccontInf]._strOpenId = [dataDict objectForKey:@"openId"];
+                 //公司logo
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompany = [dataDict objectForKey:@"companyLogo"];
+                 //公司名称
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompanyName = [dataDict objectForKey:@"companyName"];
+                 //工号
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJobNum = [dataDict objectForKey:@"jobNum"];
+
+                 // 更新个人资料 end  zjl  04-05 =====================================
+                 
+             }
+             else
+             {
+                 NSString *msg = [dict objectForKey:@"msg"];
+                 if(msg)
+                 {
+                     [SVProgressHUD showWithStr:msg];
+                 }
+             }
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+//             [SVProgressHUD showErrorWithStatus:@"修改名字失败"];
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         
+         ];
+    }
+}
+ //---------add By Aggie about "设置首次个人资料--有姓名的参数" ----end-------
+ 
+
+//修改名字--待更改<接口名字待修改>
+-(void) msgC2S_updateName:(NSString*) strTokenId name:(NSString*)strName
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    [body setObject:strName forKey:@"name"];
+    //发送命令;的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_EditName andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+//             NSString * result = [dict objectForKey:@"code"];
+//             if([result isEqualToString:@"000000"]) //请求成功
+//             {
+                 [[EMAccontManager sharedInstance] getAccontInf]._strUserName = strName;
+                 [SVProgressHUD showSuccessWithStatus:@"姓名修改成功"];
+                 //通知界面更新
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZB_EDIT_NAME object:nil];
+//             }
+//             else
+//             {
+//                 NSString *msg = [dict objectForKey:@"msg"];
+//                 if(msg)
+//                 {
+//                     [SVProgressHUD showWithStr:msg];
+//                 }
+//             }
+//             [SVProgressHUD dismissWithSuccess:[dict objectForKey:@"msg"]];
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD dismiss];
+//             [SVProgressHUD showSuccessWithStatus:@"修改名字失败"];
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         
+         ];
+    }
+}
+
+//修改电话--待更改<接口名字待修改>
+-(void) msgC2S_EditPhoneWithTokenID:(NSString*) strTokenId phone:(NSString*)strPhone
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    [body setObject:strPhone forKey:@"phone"];
+    //发送命令;的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_EditPhone andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+//                 [[EMAccontManager sharedInstance] getAccontInf]._strUserName = strName;
+                 [[NSUserDefaults standardUserDefaults] setObject:strPhone forKey:@"phoneNum"];
+                 [SVProgressHUD showSuccessWithStatus:@"电话修改成功"];
+                 //通知界面更新
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZB_EDIT_PHONE object:nil];
+             }
+             else
+             {
+                 NSString *msg = [dict objectForKey:@"msg"];
+                 if(msg)
+                 {
+                     [SVProgressHUD showWithStr:msg];
+                 }
+             }
+             //[SVProgressHUD dismiss];
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             //[SVProgressHUD dismiss];
+//             [SVProgressHUD showWithStr:@"电话名字失败"];
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         
+         ];
+    }
+}
+
+
+
+
+#pragma mark  上传文件---参数和返回值以及接口都待修改
+-(void) msgC2S_UpdateFile:(NSString*) filePath
+{
+    //发送命令的服务器
+    if (filePath != nil)
+    {
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_UpdateFile andPath:filePath  withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 NSDictionary* result = [dict objectForKey:@"result"];
+                 if(result)
+                 {
+                     //返回图片url
+                     NSString *nUrl = [result objectForKey:@"url"];
+                     NSLog(@"%@",nUrl);
+                     NSString *TokendStr = [[FileManager sharedInstance]getUserDefault:USER_TOEKN];
+                     if (TokendStr != nil)
+                     {
+                         [[EMAccontManager sharedInstance] getAccontInf]._strHeading = nUrl;
+                         [self msgC2S_UpdateAvatar:TokendStr avatar:nUrl];
+                     }
+                     
+                 }
+             }
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD showWithStr:@"上传文件失败"];
+         }
+         ];
+    }
+}
+
+#pragma mark  修改头像---参数和返回值以及接口都待修改
+-(void) msgC2S_UpdateAvatar:(NSString*) strTokenId avatar:(NSString*)strAvatar
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    [body setObject:strAvatar forKey:@"headimg"];
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_UpdateHeading andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZBY_EDIT_HEADING object:nil];
+             }
+             [SVProgressHUD dismiss];
+             
+         } withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             //[SVProgressHUD dismiss];
+             [SVProgressHUD showWithStr:@"更改头像失败!"];
+         }
+         ];
+    }
+}
+
+//修改头像
+-(void) msgC2S_UpdateImg:(NSData *)imgData {
+    NSString *tokenID = [GlobalHelper getValueByUserDefault:USER_TOEKN];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyyMMddHHmmss";
+    NSString *str = [formatter stringFromDate:[NSDate date]];
+    NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
+    //    NSData *imgData = UIImageJPEGRepresentation(userImage, 0.8);
+    NSDictionary *param = @{@"token":tokenID,
+                            @"type":@"1"
+                            };
+    //发送命令的服务器
+    if(param)
+    {
+        [SVProgressHUD show];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        //    NSString *mimeType = @"application/octet-stream";                //文件类型
+        [manager POST:XZB_UploadImg parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            [formData appendPartWithFileData:imgData name:@"file" fileName:fileName mimeType:@"image/png"];
+        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            MLog(@" url =%@  result:%@",XZB_UploadImg,operation.responseString);
+            
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
+            NSString *head = dict[@"data"][0][@"path"];
+            MLog(@"%@",dict);
+           NSMutableDictionary *userDict = [NSMutableDictionary dictionaryWithDictionary:[GlobalHelper GetDictFromStoreByKey:kkey_userInfo storeName:ktbl_userInfo]];
+            [userDict setObject:head forKey:@"headimg"];
+            [GlobalHelper SetDictIntoStore:userDict key:kkey_userInfo storeName:ktbl_userInfo];
+            // 更新头像
+            [[NSNotificationCenter defaultCenter]postNotificationName:NT_UPDATE_HEADIMAGE object:head];
+            [SVProgressHUD dismissWithSuccess:dict[@"msg"]];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             MLog(@" url =%@  result:%@   error :%@ ",XZB_UploadImg,operation.responseString,[error description]);
+            // 上传失败
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:operation.responseData options:NSJSONReadingMutableLeaves error:nil];
+            //        NSLog(@"%@",error);
+            [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+        }];
+    }
+}
+
+- (void)msgC2S_QrCodeLogin:(NSString *)URL tokenId:(NSString *)tokenid
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:1];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:URL forKey:@"codeSign"];
+    
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:QRCODE_URL andBody:body
+                         withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSLog(@"二维码登录成功");
+             [[NSNotificationCenter defaultCenter] postNotificationName:NT_QRCODE_WEBLOGIN object:nil];
+             [SVProgressHUD dismiss];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         [SVProgressHUD dismissWithError:kerror_msg_show];
+     }];
+}
+
+
+
+//add By Aggie About "创建企业"-------2016.5.13-----start ---------------
+-(void) msgC2S_CreatCompanyWithCompanyName:(NSString*)strCompanyName userName:(NSString*)strUserName phone:(NSString *)strPhone smsCode:(NSString *)strSmsCode email:(NSString *)strEmail
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strCompanyName forKey:@"companyName"];
+    [body setObject:strUserName forKey:@"userName"];
+    [body setObject:strPhone forKey:@"phone"];
+    [body setObject:strSmsCode forKey:@"smsCode"];
+    [body setObject:strEmail forKey:@"email"];
+
+    //发送命令;的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:XZB_createCompany andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 
+                 //----解析数据------start------
+                 //存储tokenId
+                 [[EMAccontManager sharedInstance] getAccontInf]._tokenId = [dict objectForKey:@"token"];
+                 // USER_NAME 写入 udf
+                 [GlobalHelper SetObjectToUDF:[[EMAccontManager sharedInstance] getAccontInf]._tokenId andKey:USER_TOEKN];
+                 // 存储data
+                 NSDictionary *dataDict = [[NSDictionary alloc] init];
+                 dataDict = [dict objectForKey:@"data"];
+                 //缓存用户数据
+                 MLog(@"用户数据：%@",dataDict);
+                 [GlobalHelper SetDictIntoStore:dataDict key:kkey_userInfo storeName:ktbl_userInfo];
+                 //// 极光推送别名
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"alias"] andKey:USER_ALIAS];
+                 //// 极光推送标签
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"tag"] andKey:USER_TAGS];
+                 //手机号
+                 [[FileManager sharedInstance] saveUserDefault:[dataDict objectForKey:@"phone"] NSString:USER_PHONE];
+                 [[EMAccontManager sharedInstance] getAccontInf]._strPhone = [dataDict objectForKey:@"phone"];
+                 //用户名
+                 [[EMAccontManager sharedInstance] getAccontInf]._strUserName = [dataDict objectForKey:@"userName"];
+                 //                  USER_NAME 写入 udf
+                 [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"userName"] andKey:USER_NAME];
+                 //性别
+                 [[EMAccontManager sharedInstance] getAccontInf]._strSex = [dataDict objectForKey:@"sex"];
+                 //生日
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBirthday = [dataDict objectForKey:@"birthday"];
+                 //地址
+                 [[EMAccontManager sharedInstance] getAccontInf]._strAddr = [dataDict objectForKey:@"addr"];
+                 //头像
+                 [[EMAccontManager sharedInstance] getAccontInf]._strHeading = [dataDict objectForKey:@"headimg"];
+                 //部门
+                 [[EMAccontManager sharedInstance] getAccontInf]._strBranch = [dataDict objectForKey:@"branch"];
+                 //职位
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJob = [dataDict objectForKey:@"job"];
+                 // 设置时间
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCreateTime = [dataDict objectForKey:@"createTime"];
+                 //企业id
+                 //                 [[EMAccontManager sharedInstance] getAccontInf]._strOpenId = [dataDict objectForKey:@"openId"];
+                 //公司logo
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompany = [dataDict objectForKey:@"companyLogo"];
+                 //公司名称
+                 [[EMAccontManager sharedInstance] getAccontInf]._strCompanyName = [dataDict objectForKey:@"companyName"];
+                 //工号
+                 [[EMAccontManager sharedInstance] getAccontInf]._strJobNum = [dataDict objectForKey:@"jobNum"];
+                 //邮箱
+                  [[EMAccontManager sharedInstance] getAccontInf]._strEmail = [dataDict objectForKey:@"email"];
+                 // 请假事项-array
+                  [[EMAccontManager sharedInstance] getAccontInf]._arrvacationType= [dataDict objectForKey:@"vacationType"];
+                 //工序
+                 [[EMAccontManager sharedInstance] getAccontInf]._pieceType= [dataDict objectForKey:@"pieceType"];
+                 
+                 //----解析数据------end------
+                 [SVProgressHUD showSuccessWithStatus:@"企业创建成功"];
+                 //通知界面更新
+                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZB_CREATE_COMPANY object:nil];
+                 
+             }
+             else
+             {
+                 NSString *msg = [dict objectForKey:@"msg"];
+                 if(msg)
+                 {
+                     [SVProgressHUD showWithStr:msg];
+                 }
+             }
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+         }
+         
+         ];
+    }
+}
+
+//add By Aggie About "创建企业"-------2016.5.13-----end ---------------
+
+
+//add By Aggie About "企业添加联系人"-------2016.5.13-----start ---------------
+
+- (void)msgC2S_AddPersonWithtokenId:(NSString *)tokenid Data:(NSMutableArray *)arrData
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:1];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:arrData forKey:@"data"];
+        
+    [SVProgressHUD show];
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_addUser andBody:body
+                         withSuccessBlock:^(NSDictionary *dict)
+     {
+         NSString * code = [dict objectForKey:@"code"];
+         if ([code isEqualToString:@"000000"])
+         {
+             NSLog(@"添加联系人成功");
+             [[NSNotificationCenter defaultCenter] postNotificationName:NT_ADDUSER object:nil];
+             [SVProgressHUD dismiss];
+         }
+         else
+         {
+             [SVProgressHUD dismissWithError:[dict objectForKey:@"msg"]];
+         }
+     } withFailBlock:^(NSError *error)
+     {
+         [SVProgressHUD dismissWithError:kerror_msg_show];
+     }];
+}
+//add By Aggie About "企业添加联系人"-------2016.5.13-----start ---------------
+
+
+/*
+//退出登录
+-(void) msgC2S_Logout:(NSString*) strTokenId
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:JJB_logout andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 // 1.修改tokenId为空
+                 [[NSUserDefaults standardUserDefaults]setObject:nil forKey:@"tokenId"];
+                 //2.通知界面更新
+//                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_LOGIN_OUT object:nil];
+
+             }
+             [SVProgressHUD dismiss];
+             
+         }
+         withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD dismiss];
+         }
+         
+         ];
+    }
+}
+
+
+//验证token
+-(void) msgC2S_tokenValidate:(NSString*) strTokenId
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    NSLog(@"!!!!!!!!!! token: %@",strTokenId);
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:JJB_tokenValidate andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             [SVProgressHUD dismiss];
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 NSDictionary *resultDict = [dict objectForKey:@"result"];
+                 //存储tokenId
+                 [[EMAccontManager sharedInstance] getAccontInf]._tokenId = [resultDict objectForKey:@"tokenId"];
+                 
+                 NSDictionary *userDict = [resultDict objectForKey:@"user"];
+                 //电话
+                [[EMAccontManager sharedInstance] getAccontInf]._strPhone = [userDict objectForKey:@"phone"];
+                //头像
+                [[EMAccontManager sharedInstance] getAccontInf]._strAvatar = [userDict objectForKey:@"avatar"];
+                //用户名
+                [[EMAccontManager sharedInstance] getAccontInf]._strUserName = [userDict objectForKey:@"name"];
+                //创建时间
+                [[EMAccontManager sharedInstance] getAccontInf]._CreateTime = [[userDict objectForKey:@"createTime"] longValue];
+                //会员到期时间
+                [[EMAccontManager sharedInstance] getAccontInf]._ExpireTime = [[userDict objectForKey:@"expireTime"] longValue];
+                 // 如果验证成功
+//                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_TOKEN_VALIDATE_SUCESS object:strTokenId];
+                 
+            }
+            else
+            {
+                 NSString *msg = [dict objectForKey:@"msg"];
+                 if(msg)
+                 {
+                     NSLog(@"######");
+                     [SVProgressHUD showWithStr:msg];
+                 }
+                 // 验证失败
+//                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_TOKEN_VALIDATE_SUCESS object:nil];
+                
+            }
+             
+         }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             // 验证失败
+//             [[NSNotificationCenter  defaultCenter] postNotificationName:NT_TOKEN_VALIDATE_SUCESS object:nil];
+             [SVProgressHUD dismiss];
+         }
+         
+         ];
+    }
+}
+
+
+
+
+
+//会员变更纪录
+-(void) msgC2S_record:(NSString*) strTokenId
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:JJB_record andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 [[EMAccontManager sharedInstance] removeAccontInfos];
+                 //新注册用户
+                 NSArray *list = [NSArray arrayWithArray:[[dict objectForKey:@"result"] objectForKey:@"list"]] ;
+                 if(list)
+                 {
+                     [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+                      {
+                          AccontInf* pAccontInf = [[AccontInf alloc] init];
+                          if(pAccontInf)
+                          {
+                              [pAccontInf set_CreateTime:[[obj objectForKey:@"createTime"] longValue]];
+                              [pAccontInf set_strUserInfo:[obj objectForKey:@"reason"]];
+                              [pAccontInf set_ExpireTime:[[obj objectForKey:@"expireTime"] longValue]];
+                              
+                              [[EMAccontManager sharedInstance] addAccontInfos:pAccontInf];
+                          }
+                      }
+                      ];
+                 }
+//                 [[NSNotificationCenter  defaultCenter] postNotificationName:NT_USER_VALIDITY object:nil];
+             }
+             [SVProgressHUD dismiss];
+         }
+         withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD dismiss];
+         }
+         
+         ];
+    }
+}
+
+//位置信息上传
+-(void) msgC2S_position:(NSString*) strTokenId lng:(NSString*)strLng lat:(NSString*) strLat
+{
+    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+    [body setObject:strTokenId forKey:@"tokenId"];
+    
+    //发送命令的服务器
+    if(body)
+    {
+        [SVProgressHUD show];
+        [[HttpConnectMgr shareMgr] requestUrl:JJB_login andBody:body
+                             withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+         {
+             NSString * result = [dict objectForKey:@"code"];
+             if([result isEqualToString:@"000000"]) //请求成功
+             {
+                 
+             }
+             [SVProgressHUD dismiss];
+         }
+                                withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+         {
+             [SVProgressHUD dismiss];
+         }
+         
+         ];
+    }
+}
+
+
+//登录网络请求发送   －－－－－－－end----------
+
+ 
+ */
+
+
+//---------add By Aggie about "设置首次个人资料--没有姓名的参数" ----start-------
+
+/*
+ -(void) msgC2S_updateTokenId:(NSString*) strTokenId companyId:(NSString *)strComponyId
+ {
+ //创建大字典
+ NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+ [body setObject:strTokenId forKey:@"token"];
+ [body setObject:strComponyId forKey:@"companyId"];
+ //发送命令的服务器
+ if(body)
+ {
+ [SVProgressHUD show];
+ [[HttpConnectMgr shareMgr] requestUrl:XZB_Setmsg andBody:body
+ withSuccessBlock:^(NSDictionary *dict) //网络回调成功的消息处理
+ {
+ 
+ [SVProgressHUD showSuccessWithStatus:@"企业查找成功"];
+ //通知界面更新
+ [[NSNotificationCenter  defaultCenter] postNotificationName:NT_XZB_SETMSG object:nil];
+ //更新个人资料=========== zjl 04-05 =================
+ // 存储data
+ NSDictionary *dataDict = [[NSDictionary alloc] init];
+ dataDict = [dict objectForKey:@"data"];
+ //缓存用户数据
+ MLog(@"用户数据：%@",dataDict);
+ [GlobalHelper SetDictIntoStore:dataDict key:kkey_userInfo storeName:ktbl_userInfo];
+ //// 极光推送别名
+ [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"alias"] andKey:USER_ALIAS];
+ //// 极光推送标签
+ [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"tag"] andKey:USER_TAGS];
+ //手机号
+ [[FileManager sharedInstance] saveUserDefault:[dataDict objectForKey:@"phone"] NSString:USER_PHONE];
+ [[EMAccontManager sharedInstance] getAccontInf]._strPhone = [dataDict objectForKey:@"phone"];
+ //用户名
+ [[EMAccontManager sharedInstance] getAccontInf]._strUserName = [dataDict objectForKey:@"userName"];
+ //                  USER_NAME 写入 udf
+ [GlobalHelper SetObjectToUDF:[dataDict objectForKey:@"userName"] andKey:USER_NAME];
+ //性别
+ [[EMAccontManager sharedInstance] getAccontInf]._strSex = [dataDict objectForKey:@"sex"];
+ //生日
+ [[EMAccontManager sharedInstance] getAccontInf]._strBirthday = [dataDict objectForKey:@"birthday"];
+ //地址
+ [[EMAccontManager sharedInstance] getAccontInf]._strAddr = [dataDict objectForKey:@"addr"];
+ //头像
+ [[EMAccontManager sharedInstance] getAccontInf]._strHeading = [dataDict objectForKey:@"headimg"];
+ //部门
+ [[EMAccontManager sharedInstance] getAccontInf]._strBranch = [dataDict objectForKey:@"branch"];
+ //职位
+ [[EMAccontManager sharedInstance] getAccontInf]._strJob = [dataDict objectForKey:@"job"];
+ // 设置时间
+ [[EMAccontManager sharedInstance] getAccontInf]._strCreateTime = [dataDict objectForKey:@"createTime"];
+ //企业id
+ [[EMAccontManager sharedInstance] getAccontInf]._strOpenId = [dataDict objectForKey:@"openId"];
+ //公司logo
+ [[EMAccontManager sharedInstance] getAccontInf]._strCompany = [dataDict objectForKey:@"companyLogo"];
+ //公司名称
+ [[EMAccontManager sharedInstance] getAccontInf]._strCompanyName = [dataDict objectForKey:@"companyName"];
+ //工号
+ [[EMAccontManager sharedInstance] getAccontInf]._strJobNum = [dataDict objectForKey:@"jobNum"];
+ 
+ // 更新个人资料 end  zjl  04-05 =====================================
+ 
+ //             }
+ //             else
+ //             {
+ //                 NSString *msg = [dict objectForKey:@"msg"];
+ //                 if(msg)
+ //                 {
+ //                     [SVProgressHUD showWithStr:msg];
+ //                 }
+ //             }
+ }withFailBlock:^(NSError *error)      //网络回调失败的消息处理
+ {
+ //             [SVProgressHUD showErrorWithStatus:@"修改名字失败"];
+ [SVProgressHUD showErrorWithStatus:kerror_msg_show];
+ NSLog(@"%@",kerror_msg_show);
+ }
+ 
+ ];
+ }
+ }
+ */
+//---------add By Aggie about "设置首次个人资料--没有姓名的参数" ----end-------
+
+
+@end

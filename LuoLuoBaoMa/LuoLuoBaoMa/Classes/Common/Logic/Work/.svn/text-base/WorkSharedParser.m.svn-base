@@ -1,0 +1,161 @@
+//
+//  WorkSharedParser.m
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import "WorkSharedParser.h"
+#import "NoticeDef.h"
+
+@implementation WorkSharedParser
+//
+//#pragma mark -
+//#pragma mark - 收到分享
+//+ (bool) parseFileSharedHistoryPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo
+//{
+//    bool bResult = true;
+//    NSDictionary * result = [packet objectForKey:@"result"];
+//    if(result)
+//    {
+//        NSArray *list = [NSArray arrayWithArray:[result objectForKey:@"list"]] ;
+//        if(list)
+//        {
+//            [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+//             {
+//                 FileInfo * pInf = [[FileInfo alloc] init];
+//                 [pInf set_strFileName:[obj objectForKey:@"fileName"]];
+//                 [pInf set_strCreateTime:[obj objectForKey:@"createTime"]];
+//                 [pInf set_lFileSize:[[obj objectForKey:@"fileSize"] intValue]];
+//                 [pInf set_strFilePath:[obj objectForKey:@"filePath"]];
+//                 [pInf set_lCustomerId:[[obj objectForKey:@"customerId"] intValue]];
+//                 [pInf set_strFileMimeType:[obj objectForKey:@"fileMimeType"]];
+//                 [pInf set_nId:[[obj objectForKey:@"id"] intValue]];
+//                 [pInf set_strFileExt:[obj objectForKey:@"fileExt"]];
+//                 [pInf set_nUserId:[[obj objectForKey:@"userId"] intValue]];
+//                 [pInf set_strMd5:[obj objectForKey:@"md5"]];
+//                 
+//                 [[EMFileSharedManager sharedInstance] addSharedHistoryInfo:pInf];
+//             }
+//             ];
+//        }
+//    }
+//    else
+//    {
+//        bResult = false;
+//    }
+//    return bResult;
+//}
+//
+//#pragma mark -
+//#pragma mark - 分享历史
+//+ (bool) parseFileReceiveSharedPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo
+//{
+//    bool bResult = true;
+//    NSDictionary * result = [packet objectForKey:@"result"];
+//    if(result)
+//    {
+//        NSArray *list = [NSArray arrayWithArray:[result objectForKey:@"list"]] ;
+//        if(list)
+//        {
+//            [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+//            {
+//                FileInfo * pInf = [[FileInfo alloc] init];
+//                [pInf set_strFileName:[obj objectForKey:@"fileName"]];
+//                [pInf set_strCreateTime:[obj objectForKey:@"createTime"]];
+//                [pInf set_lFileSize:[[obj objectForKey:@"fileSize"] intValue]];
+//                [pInf set_strFilePath:[obj objectForKey:@"filePath"]];
+//                [pInf set_lCustomerId:[[obj objectForKey:@"customerId"] intValue]];
+//                [pInf set_strFileMimeType:[obj objectForKey:@"fileMimeType"]];
+//                [pInf set_nId:[[obj objectForKey:@"id"] intValue]];
+//                [pInf set_strFileExt:[obj objectForKey:@"fileExt"]];
+//                [pInf set_nUserId:[[obj objectForKey:@"userId"] intValue]];
+//                [pInf set_strMd5:[obj objectForKey:@"md5"]];
+//                
+//                [[EMFileSharedManager sharedInstance] addReciveSharedInfo:pInf];
+//            }
+//            ];
+//        }
+//    }
+//    else
+//    {
+//        bResult = false;
+//    }
+//    return bResult;
+//}
+//
+//#pragma mark -
+//#pragma mark - 搜索数据
+//+ (bool) parseFileReceiveSharedSearchPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo
+//{
+//    bool bResult = true;
+//    NSDictionary * result = [packet objectForKey:@"result"];
+//    if(result)
+//    {
+//        NSArray *list = [NSArray arrayWithArray:[result objectForKey:@"list"]] ;
+//        if(list)
+//        {
+//            [[EMFileSharedManager sharedInstance] clearReciveSearchInfo];
+//            [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+//             {
+//                 FileInfo * pInf = [[FileInfo alloc] init];
+//                 [pInf set_strFileName:[obj objectForKey:@"fileName"]];
+//                 [pInf set_strCreateTime:[obj objectForKey:@"createTime"]];
+//                 [pInf set_lFileSize:[[obj objectForKey:@"fileSize"] intValue]];
+//                 [pInf set_strFilePath:[obj objectForKey:@"filePath"]];
+//                 [pInf set_lCustomerId:[[obj objectForKey:@"customerId"] intValue]];
+//                 [pInf set_strFileMimeType:[obj objectForKey:@"fileMimeType"]];
+//                 [pInf set_nId:[[obj objectForKey:@"id"] intValue]];
+//                 [pInf set_strFileExt:[obj objectForKey:@"fileExt"]];
+//                 [pInf set_nUserId:[[obj objectForKey:@"userId"] intValue]];
+//                 [pInf set_strMd5:[obj objectForKey:@"md5"]];
+//                 
+//                 [[EMFileSharedManager sharedInstance] addReciveSearchInfo:pInf];
+//             }
+//             ];
+//        }
+//    }
+//    else
+//    {
+//        bResult = false;
+//    }
+//    return bResult;
+//}
+//+ (bool) parseFileSharedHistorySearchPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo
+//{
+//    bool bResult = true;
+//    NSDictionary * result = [packet objectForKey:@"result"];
+//    if(result)
+//    {
+//        NSArray *list = [NSArray arrayWithArray:[result objectForKey:@"list"]] ;
+//        if(list)
+//        {
+//            [[EMFileSharedManager sharedInstance] clearHistorySearchInfo];
+//            [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+//             {
+//                 FileInfo * pInf = [[FileInfo alloc] init];
+//                 [pInf set_strFileName:[obj objectForKey:@"fileName"]];
+//                 [pInf set_strCreateTime:[obj objectForKey:@"createTime"]];
+//                 [pInf set_lFileSize:[[obj objectForKey:@"fileSize"] intValue]];
+//                 [pInf set_strFilePath:[obj objectForKey:@"filePath"]];
+//                 [pInf set_lCustomerId:[[obj objectForKey:@"customerId"] intValue]];
+//                 [pInf set_strFileMimeType:[obj objectForKey:@"fileMimeType"]];
+//                 [pInf set_nId:[[obj objectForKey:@"id"] intValue]];
+//                 [pInf set_strFileExt:[obj objectForKey:@"fileExt"]];
+//                 [pInf set_nUserId:[[obj objectForKey:@"userId"] intValue]];
+//                 [pInf set_strMd5:[obj objectForKey:@"md5"]];
+//                 
+//                 [[EMFileSharedManager sharedInstance] addHistorySearchInfo:pInf];
+//             }
+//             ];
+//        }
+//    }
+//    else
+//    {
+//        bResult = false;
+//    }
+//    return bResult;
+//}
+
+@end

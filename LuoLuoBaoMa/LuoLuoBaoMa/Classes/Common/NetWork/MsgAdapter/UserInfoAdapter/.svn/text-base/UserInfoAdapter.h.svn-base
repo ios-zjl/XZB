@@ -1,0 +1,32 @@
+//
+//  UserInfoAdapter.h
+//  xingzhengbao
+//
+//  Created by afyylong on 16/3/30.
+//  Copyright © 2016年 XZB. All rights reserved.
+//  我的考勤 我的申请的网络请求
+
+#import <Foundation/Foundation.h>
+#import "Common.h"
+#import "WorkInfo.h"
+
+
+//考勤记录
+#define XZB_WORKLIST [NSString stringWithFormat:@"%@/workList",_APPSERVER_IP]
+
+//我的申请
+#define XZB_MYAPPLY [NSString stringWithFormat:@"%@/myApply",_APPSERVER_IP]
+
+@interface UserInfoAdapter : NSObject
+
++ (UserInfoAdapter *)sharedInstance;
+
+#pragma mark 考勤列表
+-(void)msgC2S_WorkList:(NSString *)tokenid;
+
+#pragma mark 我的请假
+-(void)msgC2S_MyApply:(NSString *)tokenid Type:(NSString*)type State:(NSString *)state;
+
+
+
+@end

@@ -1,0 +1,235 @@
+//
+//  WorkInfo.h
+//  EMM
+//
+//  Created by spceter on 16/3/29.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import "WorkInfo.h"
+
+@implementation WorkInfo
+
+@synthesize  _strType      = m_strType;
+@synthesize  _lLng         = m_lLng;
+@synthesize  _lLat         = m_lLat;
+
+@end
+
+@implementation WorkData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strType       = m_strType;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation WorkDataDetail
+
+@synthesize  _strCreateTime = m_strCreateTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strType       = m_strType;
+@synthesize  _strUserName   = m_strUserName;
+@end
+
+@implementation WorkApplyInfo
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strOutTime    = m_strOutTime;
+@synthesize  _strPass       = m_strPass;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation WorkScanInfo
+
+@synthesize  _strToken      = m_strToken;
+@synthesize  _strLeadToken  = m_strLeadToken;
+@synthesize  _strLng        = m_strLng;
+@synthesize  _strLat        = m_strLat;
+@synthesize  _strRecordId = m_strRecordId;
+@synthesize  _strState      = m_strState;
+
+@end
+
+@implementation ScanData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strType       = m_strType;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation AddWorkInfo
+
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strLng        = m_strLng;
+@synthesize  _strLat        = m_strLat;
+@synthesize  _strTime       = m_strTime;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strLeadPhone  = m_strLeadPhone;
+@synthesize _nApplyType     = m_nApplyType;
+@end
+
+@implementation AddWorkData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strIdSign     = m_strIdSign;
+@synthesize  _strType       = m_strType;
+
+@end
+
+@implementation AddWorkDetailData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strUserName   = m_strUserName;
+@synthesize  _strTime       = m_strTime;
+@synthesize  _strType       = m_strType;
+@synthesize  _strCreateTime = m_strCreateTime;
+
+@end
+
+@implementation AddWorkApplyInfo
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strPass       = m_strPass;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation VacationInfo
+
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strLng        = m_strLng;
+@synthesize  _strLat        = m_strLat;
+@synthesize  _strStartType  = m_strStartType;
+@synthesize  _strEndType    = m_strEndType;
+@synthesize  _strTypeName   = m_strTypeName;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strLeadPhone  = m_strLeadPhone;
+@synthesize  _arrImg        = m_arrImg;
+
+@end
+
+@implementation VacationData
+
+@synthesize  _strRecordId = m_strRecordId;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation VacationApplyInfo
+
+@synthesize  _strRecordId = m_strRecordId;
+@synthesize  _strPass       = m_strPass;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation RecordKeepInfo
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strIdSign     = m_strIdSign;
+@synthesize  _strType       = m_strType;
+
+@end
+
+@implementation UploadImgInfo
+
+@synthesize  _strType    = m_strType;
+@synthesize  _imgData    = m_imgData;
+
+@end
+
+@implementation UploadImgData
+
+@synthesize  _strPath       = m_strPath;
+@synthesize  _relPath       = m_relPath;
+
+@end
+
+@implementation RetroactiveInfo
+
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strLeadPhone  = m_strLeadPhone;
+
+
+@end
+
+@implementation RetroactiveData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strIdSign     = m_strIdSign;
+@synthesize  _strType       = m_strType;
+@synthesize  _strCreateTime = m_strCreateTime;
+
+@end
+
+@implementation RetroactiveDetailData
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strIdSign     = m_strIdSign;
+@synthesize  _strUserName   = m_strUserName;
+@synthesize  _arrList       = m_arrList;
+
+@end
+
+@implementation RetroactivelistData
+
+@synthesize  _strStartTime  = m_strStartTime;
+@synthesize  _strEndTime    = m_strEndTime;
+@synthesize  _strMsg        = m_strMsg;
+
+@end
+
+
+@implementation RetroactiveApplyInfo
+
+@synthesize  _strRecordId   = m_strRecordId;
+@synthesize  _strPass       = m_strPass;
+@synthesize  _strIdSign     = m_strIdSign;
+
+@end
+
+@implementation LineOutWorkInfo
+
+@synthesize  _strType       = m_strType;
+@synthesize  _strLng        = m_strLng;
+@synthesize  _strLat        = m_strLat;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strOutTimeMsg = m_strOutTimeMsg;
+@synthesize  _strAddr       = m_strAddr;
+@synthesize  _strPhone      = m_strPhone;
+@synthesize  _imgData       = m_imgData;
+@end
+
+
+@implementation LineOnWorkInfo
+
+@synthesize  _strType       = m_strType;
+@synthesize  _strLng        = m_strLng;
+@synthesize  _strLat        = m_strLat;
+@synthesize  _strMsg        = m_strMsg;
+@synthesize  _strOutTimeMsg = m_strOutTimeMsg;
+@synthesize  _strAddr       = m_strAddr;
+@synthesize  _strPhone      = m_strPhone;
+@end
+
+
+@implementation AddContactData
+
+@synthesize  _strName       = m_strName;
+@synthesize  _nTelephone    = m_nTelephone;
+
+@end

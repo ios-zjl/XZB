@@ -1,0 +1,66 @@
+//
+//  WorkSharedConstructor.m
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import "WorkSharedConstructor.h"
+
+@implementation WorkSharedConstructor
+//
+///*
+// 功能：构造冰盾云分享数据列表的命令
+// 参数1: 用户的TokenId
+// 参数2: 分类ID
+// 参数3: 页数
+// 参数4: 每页的行数
+// */
+//+(NSMutableDictionary*) assembleFileSharedPacketWithTokenId:(NSString *)strTokenId page:(int) nPage row:(int)nRow type:(int)nType
+//{
+//    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+//    
+//    //设置tokenId
+//    [body setObject:strTokenId forKey:TOKEN_ID];
+//    
+//    //设置page
+//    [body setObject:[NSString stringWithFormat:@"%d",nPage] forKey:@"page"];
+//    
+//    //设置row
+//    [body setObject:[NSString stringWithFormat:@"%d",nRow] forKey:@"rows"];
+//    
+//    // 设置type
+//    [body setObject:[NSString stringWithFormat:@"%d",nType] forKey:@"type"];
+//    return  body;
+//}
+//
+///*
+// 功能：构造冰盾云分享数据列表的命令
+// 参数1: appName
+// 参数2: 用户的TokenId
+// 参数3: 分类ID
+// 参数4: 页数
+// 参数5: 每页的行数
+// */
+//+(NSMutableDictionary*) assembleFileSharedPacketWithFileName:(NSString *)strFileName WithTokenId:(NSString*)strTokenId page:(int) nPage row:(int)nRow type:(int)nType
+//{
+//    NSMutableDictionary * body = [[NSMutableDictionary alloc]initWithCapacity:0];
+//    
+//    //设置tokenId
+//    [body setObject:strTokenId forKey:TOKEN_ID];
+//    // 设置appName
+//    [body setObject:strFileName forKey:@"fileName"];
+//    
+//    //设置page
+//    [body setObject:[NSString stringWithFormat:@"%d",nPage] forKey:@"page"];
+//    
+//    //设置row
+//    [body setObject:[NSString stringWithFormat:@"%d",nRow] forKey:@"rows"];
+//    
+//    // 设置type
+//    [body setObject:[NSString stringWithFormat:@"%d",nType] forKey:@"type"];
+//    return  body;
+//}
+
+@end

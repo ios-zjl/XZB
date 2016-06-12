@@ -1,0 +1,23 @@
+//
+//  WorkList.h
+//  xingzhengbao
+//
+//  Created by gengjiulong on 16/3/30.
+//  Copyright © 2016年 XZB. All rights reserved.
+//  考勤记录
+
+#import <Foundation/Foundation.h>
+
+@interface WorkList : NSObject
+{
+    NSDictionary *XZ_WorkListDict;
+}
+@property (nonatomic, strong) NSDictionary *_WorkListDict;
+@end
+
+@interface MyApply : NSObject
+{
+    NSDictionary *XZ_MyApplyDict;
+}
+@property (nonatomic, strong) NSDictionary *_MyApplyDict;
+@end

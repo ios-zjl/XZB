@@ -1,0 +1,379 @@
+//
+//  WorkInfo.h
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+// 上下班信息表
+@interface WorkInfo : NSObject
+{
+    NSString* m_strType;        // 类型 1＝上班 2＝下班
+    NSString* m_lLng;           // 经度
+    NSString* m_lLat;           // 纬度
+}
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _lLng;
+@property(nonatomic,strong) NSString* _lLat;
+@end
+
+// 上下班 数据
+@interface WorkData : NSObject
+{
+    NSString* m_strRecordId;    // 上下班申请id
+    NSString* m_strStartTime;   // 上班时间
+    NSString* m_strEndTime;     // 下班时间
+    NSString* m_strType;        // 上下班类型
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+// 上下班 组长审批详情 数据
+@interface WorkDataDetail : NSObject
+{
+    NSString* m_strCreateTime;  // 上下班签到申请时间
+    NSString* m_strEndTime;     // 下班时间
+    NSString* m_strRecordId;    // 上下班申请id
+    NSString* m_strStartTime;   // 上班时间
+    NSString* m_strType;        // 上下班状态 1、上班 2、下班
+    NSString* m_strUserName;    // 姓名
+}
+@property(nonatomic,strong) NSString* _strCreateTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strUserName;
+@end
+
+//上下班申请   组长确认、拒绝审批 信息表
+@interface WorkApplyInfo : NSObject
+{
+    NSString* m_strRecordId;    // 上下班申请id
+    NSString* m_strOutTime;     // 迟到早退时长
+    NSString* m_strPass;        // 1、同意 2、拒绝
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strOutTime;
+@property(nonatomic,strong) NSString* _strPass;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+//上下班审批人扫码审批 信息表
+@interface WorkScanInfo : NSObject
+{
+    NSString* m_strToken;       // 用户token
+    NSString* m_strLeadToken;   // 考勤员token
+    NSString* m_strLng;         // 经度
+    NSString* m_strLat;         // 纬度
+    NSString* m_strRecordId;    // 申请id
+    NSString* m_strState;       // 1、同意 2、拒绝
+}
+@property(nonatomic,strong) NSString* _strToken;
+@property(nonatomic,strong) NSString* _strLeadToken;
+@property(nonatomic,strong) NSString* _strLng;
+@property(nonatomic,strong) NSString* _strLat;
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strState;
+@end
+
+// 二维码扫描数据
+@interface ScanData : NSObject
+{
+    NSString* m_strRecordId;    // 上下班申请id
+    NSString* m_strType;        // 上下班状态 1、上班 2、下班
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+// 加班提交申请 信息表
+@interface AddWorkInfo : NSObject
+{
+    NSString* m_strStartTime;   // 开始时间
+    NSString* m_strEndTime;     // 结束时间
+    NSString* m_strLng;         // 经度
+    NSString* m_strLat;         // 纬度
+    NSString* m_strTime;        // 加班时长
+    NSString* m_strMsg;         // 加班说明
+    NSString* m_strLeadPhone;  // 审批人手机
+    NSString* m_nApplyType;    //1在线签 2二维码签
+
+    
+}
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strLng;
+@property(nonatomic,strong) NSString* _strLat;
+@property(nonatomic,strong) NSString* _strTime;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strLeadPhone;
+@property(nonatomic,strong) NSString* _nApplyType;
+@end
+
+
+// 加班提交申请 数据
+@interface AddWorkData : NSObject
+{
+    NSString* m_strRecordId;    // 加班申请id
+    NSString* m_strIdSign;      // id 签名
+    NSString* m_strType;        // 申请类型
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strIdSign;
+@property(nonatomic,strong) NSString* _strType;
+@end
+
+// 加班 组长审批详情
+@interface AddWorkDetailData : NSObject
+{
+    NSString* m_strRecordId;        // 加班申请id
+    NSString* m_strStartTime;       // 加班开始时间
+    NSString* m_strEndTime;         // 加班结束时间
+    NSString* m_strMsg;             // 加班说明
+    NSString* m_strUserName;        // 用户姓名
+    NSString* m_strTime;            // 加班时长
+    NSString* m_strType;            // 类型
+    NSString* m_strCreateTime;      // 加班申请时间
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strUserName;
+@property(nonatomic,strong) NSString* _strTime;
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strCreateTime;
+@end
+
+// 加班 组长审批详情
+@interface AddWorkApplyInfo : NSObject
+{
+    NSString* m_strRecordId;    // 加班申请id
+    NSString* m_strPass;        // 1、同意 2、拒绝
+    NSString* m_strIdSign;      // id 签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strPass;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+// 请假信息表
+@interface VacationInfo : NSObject
+{
+    NSString* m_strStartTime;  // 请假开始时间
+    NSString* m_strEndTime;    // 请假结束时间
+    NSString* m_strLng;        // 经度
+    NSString* m_strLat;        // 纬度
+    NSString* m_strStartType;  // 请假开始 1、上午 2、下午
+    NSString* m_strEndType;    // 请假结束 1、上午 2、下午
+    NSString* m_strTypeName;   // 请假类型
+    NSString* m_strMsg;        // 请假说明
+    NSString* m_strLeadPhone;  // 审批人手机
+    NSMutableArray *m_arrImg;  // 请假图片 json
+}
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strLng;
+@property(nonatomic,strong) NSString* _strLat;
+@property(nonatomic,strong) NSString* _strStartType;
+@property(nonatomic,strong) NSString* _strEndType;
+@property(nonatomic,strong) NSString* _strTypeName;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strLeadPhone;
+@property(nonatomic,strong) NSMutableArray* _arrImg;
+@end
+
+// 请假申请 数据
+@interface VacationData : NSObject
+{
+    NSString* m_strRecordId;    // 请假申请id
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+@interface VacationApplyInfo : NSObject
+{
+    NSString* m_strRecordId;    // 请假申请id
+    NSString* m_strPass;        // 1、同意 2、拒绝
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strPass;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+// 二维码保存 信息表
+@interface RecordKeepInfo : NSObject
+{
+    NSString* m_strRecordId;    // 申请ID
+    NSString* m_strIdSign;      // id 签名
+    NSString* m_strType;        // 1、上班 2、下班 3、加班 4、请假 5、迟到 6、早退
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strIdSign;
+@property(nonatomic,strong) NSString* _strType;
+@end
+
+// 上传图片 信息表
+@interface UploadImgInfo : NSObject
+{
+    NSString*       m_strType;          // 图片类型 1、头像 2、请假 3、计件 4、外勤
+    NSMutableArray* m_imgData;          // 图片数据相关 ZLPhotoAssets
+    
+}
+@property(nonatomic,strong) NSString*       _strType;
+@property(nonatomic,strong) NSMutableArray* _imgData;
+@end
+
+// 上传图片 数据
+@interface UploadImgData : NSObject
+{
+    NSString*       m_strPath;     // 路径
+    NSString*       m_relPath;     // rel路径
+    
+}
+@property(nonatomic,strong) NSString*       _strPath;
+@property(nonatomic,strong) NSString*       _relPath;
+@end
+
+// 补签申请 信息表
+@interface RetroactiveInfo : NSObject
+{
+    NSString*       m_strStartTime;   // 开始时间
+    NSString*       m_strEndTime;     // 结束时间
+    NSString*       m_strMsg;         // 补签备注
+    NSString* m_strLeadPhone;  // 审批人手机
+
+    
+}
+@property(nonatomic,strong) NSString* _strStartTime;
+@property(nonatomic,strong) NSString* _strEndTime;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strLeadPhone;
+
+@end
+
+// 补签申请 数据
+@interface RetroactiveData : NSObject
+{
+    NSString* m_strRecordId;    // 申请id
+    NSString* m_strType;        // 类型
+    NSString* m_strIdSign;      // id签名
+    NSString* m_strCreateTime;  // 申请时间
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strIdSign;
+@property(nonatomic,strong) NSString* _strCreateTime;
+@end
+
+// 补签审核详情 数据
+@interface RetroactiveDetailData : NSObject
+{
+    NSString* m_strUserName;    // 补签人名
+    NSString* m_strRecordId;    // 申请id
+    NSString* m_strIdSign;      // id签名
+    NSMutableArray* m_arrList;  // 补签数据组
+}
+@property(nonatomic,strong) NSString*       _strRecordId;
+@property(nonatomic,strong) NSString*       _strUserName;
+@property(nonatomic,strong) NSString*       _strIdSign;
+@property(nonatomic,strong) NSMutableArray* _arrList;
+@end
+
+@interface RetroactivelistData : NSObject
+{
+    NSString* m_strStartTime;   // 开始时间
+    NSString* m_strEndTime;     // 结束时间爱你
+    NSString* m_strMsg;         // 描述信息
+}
+@property(nonatomic,strong) NSString*       _strStartTime;
+@property(nonatomic,strong) NSString*       _strEndTime;
+@property(nonatomic,strong) NSString*       _strMsg;
+@end
+
+// 补签 同意、拒绝审批 信息表
+@interface RetroactiveApplyInfo : NSObject
+{
+    NSString* m_strRecordId;    // 补签申请id
+    NSString* m_strPass;        // 1、同意 2、拒绝
+    NSString* m_strIdSign;      // id签名
+}
+@property(nonatomic,strong) NSString* _strRecordId;
+@property(nonatomic,strong) NSString* _strPass;
+@property(nonatomic,strong) NSString* _strIdSign;
+@end
+
+//上下班外勤打卡 信息表
+@interface LineOutWorkInfo : NSObject
+{
+    NSString* m_strType;        // 上班 下班
+    NSString* m_strLng;         // 经度
+    NSString* m_strLat;         // 纬度
+    NSString* m_strMsg;         // 备注信息
+    NSString* m_strOutTimeMsg;  // 迟到信息
+    NSString* m_strAddr;        // 地址
+    NSString* m_strPhone;       // 审核人号码
+    NSMutableArray* m_imgData;  // 图片数据相关 ZLPhotoAssets
+    
+}
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strLng;
+@property(nonatomic,strong) NSString* _strLat;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strOutTimeMsg;
+@property(nonatomic,strong) NSString* _strAddr;
+@property(nonatomic,strong) NSString* _strPhone;
+@property(nonatomic,strong) NSMutableArray* _imgData;
+
+@end
+
+
+//上下班在线打卡 信息表
+@interface LineOnWorkInfo : NSObject
+{
+    NSString* m_strType;        // 上班 下班
+    NSString* m_strLng;         // 经度
+    NSString* m_strLat;         // 纬度
+    NSString* m_strMsg;         // 备注信息
+    NSString* m_strOutTimeMsg;  // 迟到信息
+    NSString* m_strAddr;        // 地址
+    NSString* m_strPhone;       // 审核人号码
+    
+}
+@property(nonatomic,strong) NSString* _strType;
+@property(nonatomic,strong) NSString* _strLng;
+@property(nonatomic,strong) NSString* _strLat;
+@property(nonatomic,strong) NSString* _strMsg;
+@property(nonatomic,strong) NSString* _strOutTimeMsg;
+@property(nonatomic,strong) NSString* _strAddr;
+@property(nonatomic,strong) NSString* _strPhone;
+
+@end
+
+
+// 添加联系人--姓名和电话
+@interface AddContactData : NSObject
+{
+    NSString*       m_strName;     // 姓名
+    NSString*       m_nTelephone;  // 电话
+    
+}
+@property(nonatomic,strong) NSString*       _strName;
+@property(nonatomic,strong) NSString*       _nTelephone;
+@end
+

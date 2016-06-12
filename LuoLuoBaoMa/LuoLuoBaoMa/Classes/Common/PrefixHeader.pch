@@ -1,0 +1,65 @@
+//
+//  PrefixHeader.pch
+//  YiHaoZhuShou
+//
+//  Created by 张金龙 on 16/3/25.
+//  Copyright © 2016年 YHZS. All rights reserved.
+//
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "UIColor+hexColor.h"
+#import "CommonUtils.h"
+#import "Common.h"      // 通用
+#import "NoticeDef.h" // 通知
+#import "SVProgressHUD.h"
+
+#import "GlobalHelper.h" // 通用方法
+
+
+#pragma mark -
+#pragma mark   极光证书key
+
+
+#pragma mark -
+#pragma mark Token
+
+#define USER_TOEKN @"USER_TOEKN"    // token
+#define USER_PHONE @"USER_PHONE"    // 手机号码
+#define USER_NAME @"USER_NAME"      // 名字
+#define USER_ALIAS @"USER_ALIAS" // 极光推送—别名
+#define USER_TAGS @"USER_TAGS"      // 极光 - 标签 tag
+#define USER_IsSet @"USER_IsSet"
+#define USER_IsShow @"USER_IsShow" // 1.显示加入企业 2、不显示加入企业
+#define USER_IsAdmin @"USER_IsAdmin"//1、普通员工 2、管理员
+
+
+#pragma mark -
+#pragma mark 顶部导航栏Tag - BaseControllers
+
+#define kNav_Title_ButtonTag  100010
+#define kNav_Left_ButtonTag 100020   //左
+#define kNav_Right_ButtonTag 100021   //右
+
+
+
+// 通知列表的类型
+typedef NS_ENUM(NSInteger, NoticeDetailType) {
+    NoticeDetail4OnWork,    // 上班
+    NoticeDetail4OffWork, // 下班
+    NoticeDetail4Leave,  // 请假
+    NoticeDetail4WorkOver, // 加班
+    NoticeDetail4Dimission  // 离岗
+    
+};
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif
+
+#endif /* PrefixHeader_pch */

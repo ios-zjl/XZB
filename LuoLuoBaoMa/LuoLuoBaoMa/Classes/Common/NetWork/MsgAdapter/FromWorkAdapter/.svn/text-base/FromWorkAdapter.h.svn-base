@@ -1,0 +1,94 @@
+//
+//  FromWorkAdapter.m
+//  xingzhengbao
+//
+//  Created by specter on 16/3/29.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "Common.h"
+#import "WorkInfo.h"
+
+@interface FromWorkAdapter : NSObject
+
++(FromWorkAdapter *)sharedInstance;
+
+#pragma mark  上下班申请
+-(void) msgC2S_Register:(NSString *)tokenid Data:(WorkInfo*)pWorkInfo;
+
+#pragma mark  上下班 组长审批详情
+-(void) msgC2S_RegisterDetail:(NSString *)tokenid registerid:(NSString *)regid idSign:(NSString *) signid;
+
+#pragma mark  上下班 申请 组长确认、拒绝审批
+-(void) msgC2S_RegisterApply:(NSString *)tokenid Data:(WorkApplyInfo*)pWorkApplyInfo;
+
+
+
+#pragma mark  加班提交申请
+-(void) msgC2S_AddWork:(NSString *)tokenid Data:(AddWorkInfo*)pAddApplyInfo;
+
+#pragma mark  加班 组长审批详情
+-(void) msgC2S_AddWorkDetail:(NSString *)tokenid addRecordId:(NSString *)rordid idSign:(NSString *) signid;
+
+#pragma mark  加班 申请 组长确认、拒绝审批
+-(void) msgC2S_AddWorkApply:(NSString *)tokenid Data:(AddWorkApplyInfo*)pAddWorkApplyInfo;
+
+
+
+#pragma mark  请假提交申请
+-(void) msgC2S_Vacation:(NSString *)tokenid Data:(VacationInfo*)pVacationInfo;
+
+#pragma mark  请假 申请 组长确认、拒绝审批
+-(void) msgC2S_VacationApply:(NSString *)tokenid Data:(VacationApplyInfo*)pVacationApplyInfo;
+
+#pragma mark  请假申请，提交下级审核  只有在同意操作下才可提交下级审核
+-(void) msgC2S_NextApply:(NSString *)tokenid Data:(VacationApplyInfo*)pApplyInfo;
+
+
+
+#pragma mark  - 迟到申请
+//-(void) msgC2S_WorkOutTimeApply:(NSString *)tokenid dict:(NSDictionary *)dict;
+-(void) msgC2S_WorkOutTimeApply:(NSString *)tokenid typeId:(int)typeId dict:(NSDictionary *)dict;
+#pragma mark  - 迟到申请详情页面
+-(void) msgC2S_WorkoutTimeDetail:(NSString *)tokenid outTimeId:(NSString *)outTimeId idSign:(NSString *)idSign;
+
+
+#pragma mark  二维码保存
+-(void) msgC2S_RecordKeep:(NSString *)tokenid Data:(RecordKeepInfo*)pRKInfo;
+
+#pragma mark  上传图片
+-(void) msgC2S_UploadImg:(NSString *)tokenid Data:(UploadImgInfo*)pRKInfo;
+
+// 上传多图片 - zjl
+-(void) msgC2S_UploadImgByKey:(NSString *)key type:(int)type Data:(NSArray *)list;
+//  计件详情
+-(void) msgC2S_PieceDetail:(NSString *)idSign recordId:(NSString *)recordId;
+
+#pragma mark  补签申请
+-(void) msgC2S_Supply:(NSString *)tokenid tolng:(NSString*)lng tolat:(NSString*)lat Data:(NSMutableArray*) pInfoList;
+
+#pragma mark  补签审核详情
+-(void) msgC2S_SupplyDetail:(NSString *)tokenid addRecordId:(NSString *)rordid idSign:(NSString *) signid;
+
+#pragma mark  补签 同意、拒绝审批
+-(void) msgC2S_SupplyApply:(NSString *)tokenid Data:(VacationApplyInfo*)pVacationApplyInfo;
+
+#pragma mark -
+#pragma mark 在线打卡
+-(void) msgC2S_OnWorkWithTokenID:(NSString *)tokenid Type:(NSString*)nType Lng:(NSString *)nLng Lat:(NSString *)nLat OutTimeMsg:(NSString *)strOutTimeMsg Range:(NSString *)strRange addr:(NSString *)strAddr;
+// ---add By Aggie About "在线签到加班申请"----2016.5.6------start----
+-(void) msgC2S_OnWokeCheckAddWork:(NSString *)tokenid Data:(AddWorkInfo*)pAddApplyInfo;
+// ---add By Aggie About "在线签到加班申请"----2016.5.6------start----
+
+
+#pragma mark  外勤打开
+-(void) msgC2S_LineOutWork:(NSString *)tokenid Data:(LineOutWorkInfo*)pLineOutWorkInfo;
+// ---add By Aggie About "在线补签申请"----2016.5.6------start----
+-(void) msgC2S_LineSupply:(NSString *)tokenid tolng:(NSString*)lng tolat:(NSString*)lat Data:(NSMutableArray*) pInfoList strPhone:(NSString *)strPhone;
+// ---add By Aggie About "在线补签申请"----2016.5.6------end----
+
+#pragma mark  获取打卡状态
+-(void) msgC2S_LineIndex:(NSString *)tokenid;
+
+@end

@@ -1,0 +1,75 @@
+//
+//  LoginManager.h
+//  EMM
+//  用户登录信息的数据管理类
+//  Created by xingfengzheng on 15/10/14.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "AccontInfo.h"
+
+@interface EMAccontManager : NSObject
+{
+    //账号信息
+    AccontInf* m_pAccontInfo;
+    
+    //手机验证码信息
+    NSString* m_strPhoneCode;
+    
+    //会员有效期信息
+    NSMutableArray *m_arrAccontInfos;
+    
+    BOOL ScanLogIn;
+    BOOL skipPage;//是否跳过
+    
+}
+@property(nonatomic,strong) AccontInf *_pAccontInfo;
+
+
+//设置手机验证码
+-(void) setPhoneCode:(NSString*) strPhone;
+
+//获取手机验证吗
+-(NSString*) getPhoneCode;
+
+//add by zhengxf about "帐号信息的存取" 2015-10-22  ---------begin---------
+//设置tags
+-(void) setTags:(NSArray*) arrTags;
+
+//获取tags
+-(NSArray*) getTagsArr;
+
+//获取账号信息的结构体
+-(AccontInf*) getAccontInf;
+
+//add by zhengxf about "帐号信息的存取" 2015-10-22  ---------end---------
+
+// 获取有效期信息相关
+-(void)addAccontInfos:(AccontInf*)Inf;
+
+-(void)removeAccontInfos;
+
+-(AccontInf*)getAccontInfoIndex:(int)index;
+
+-(int)getAccontInfosCount;
+// 获取有效期信息相关
+
++(EMAccontManager*) sharedInstance;
+
+//add by zhengxf about "通讯录联系人的存取" 2015-11-05  ---------begin---------
+
+//初始化账号管理器
+-(void) InitMgr;
+//Add by zhengxf about 
+
+// 存入登陆模式
+-(void)isSacnLogIn:(BOOL)LogInType;
+// 取出登陆模式
+-(BOOL)getIsScanLogIn;
+
+// 存入跳转与否模式
+-(void)isSkipPage:(BOOL)skipPageInType;
+// 取出跳转与否模式
+-(BOOL)getIsSkipPage;
+@end

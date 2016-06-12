@@ -1,0 +1,22 @@
+//
+//  WorkSharedParser.h
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface WorkSharedParser : NSObject
+
+//// 收到分享
+//+ (bool) parseFileReceiveSharedPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo;
+//// 分享历史
+//+ (bool) parseFileSharedHistoryPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo;
+//
+//// 收到分享 - 搜索数据
+//+ (bool) parseFileReceiveSharedSearchPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo;
+//// 分享历史 - 搜索数据
+//+ (bool) parseFileSharedHistorySearchPacket:(NSDictionary *) packet toResponse:(FileInfo *)responseInfo;
+@end

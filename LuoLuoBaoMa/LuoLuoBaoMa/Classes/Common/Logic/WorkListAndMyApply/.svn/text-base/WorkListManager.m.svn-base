@@ -1,0 +1,30 @@
+//
+//  WorkListManager.m
+//  xingzhengbao
+//
+//  Created by afyylong on 16/3/30.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import "WorkListManager.h"
+
+static WorkListManager* _instance = nil;
+@implementation WorkListManager
+
+@synthesize workList = workList;
+@synthesize myApply = myApply;
+
++(WorkListManager*) sharedInstance
+{
+    @synchronized(self)
+    {
+        if(_instance == nil)
+        {
+            _instance = [[WorkListManager alloc] init];
+        }
+    }
+    return _instance;
+}
+
+
+@end

@@ -1,0 +1,32 @@
+//
+//  WorkSharedConstructor.h
+//  EMM
+//
+//  Created by spceter on 16/3/15.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface WorkSharedConstructor : NSObject
+
+///*
+// 功能：构造冰盾云分享数据列表的命令
+// 参数1: 用户的TokenId
+// 参数2: 分类ID
+// 参数3: 页数
+// 参数4: 每页的行数
+// */
+//+(NSMutableDictionary*) assembleFileSharedPacketWithTokenId:(NSString *)strTokenId page:(int) nPage row:(int)nRow type:(int)nType;
+//
+///*
+// 功能：构造冰盾云分享数据列表的命令
+// 参数1: appName
+// 参数2: 用户的TokenId
+// 参数3: 分类ID
+// 参数4: 页数
+// 参数5: 每页的行数
+// */
+//+(NSMutableDictionary*) assembleFileSharedPacketWithFileName:(NSString *)strFileName WithTokenId:(NSString*)strTokenId page:(int) nPage row:(int)nRow type:(int)nType;
+
+@end

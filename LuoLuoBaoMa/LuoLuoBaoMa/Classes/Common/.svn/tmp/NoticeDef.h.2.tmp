@@ -1,0 +1,198 @@
+//
+//  NoticeDef.h
+//  YiHaoZhuShou
+//
+//  Created by 张金龙 on 16/3/25.
+//  Copyright © 2016年 YHZS. All rights reserved.
+//   定义事件通知的名称
+
+#ifndef NoticeDef_h
+#define NoticeDef_h
+
+#pragma mark -
+#pragma mark  Tabbar 中间按钮点击事件通知
+
+#define NT_TABBAR_MIDBUTTON_CLICK @"nt_tabbar_midbutton" //
+
+#pragma mark -
+#pragma mark  分类名称
+
+#define NT_NET_STATECHANGE      @"nt_Net_StateChange"  //具体名称
+
+#pragma mark -
+#pragma mark 在线上下班申请
+
+#define NT_REGISTER  @"nt_Register"  //在线上下班申请
+
+
+#pragma mark -
+#pragma mark 在线上下班申请
+
+#define NT_REGISTER_DETAIL  @"nt_Register_Detail"  //上下班 组长审批详情
+
+#pragma mark -
+#pragma mark 在线上下班申请
+
+#define NT_REGISTER_APPLY  @"nt_Register_Apply"  //上下班 申请 组长确认、拒绝审批
+
+#pragma mark -
+#pragma mark 加班申请
+
+#define NT_ADDWORK  @"nt_AddWork"  //加班 申请
+
+#pragma mark -
+#pragma mark 加班 组长审批详情
+
+#define NT_ADDWORK_DETAIL  @"nt_AddWork_Detail"  //加班 组长审批详情
+
+#pragma mark -
+#pragma mark 请假申请
+
+#define NT_VACATION  @"nt_Vacation"  //请假申请
+
+#pragma mark -
+#pragma mark 请假 申请 组长确认、拒绝审批
+
+#define NT_VACATION_APPLY  @"nt_Vacation_Apply"  //请假 申请 组长确认、拒绝审批
+
+#pragma mark -
+#pragma mark 请假申请，提交下级审核  只有在同意操作下才可提交下级审核
+
+#define NT_NEXTAPPLY  @"nt_NextApply"  //请假申请，提交下级审核  只有在同意操作下才可提交下级审核
+
+#pragma mark -
+#pragma mark 加班 申请 组长确认、拒绝审
+
+#define NT_ADDWORK_APPLY  @"nt_AddWork_Apply"  //加加班 申请 组长确认、拒绝审
+
+#pragma mark -
+#pragma mark 迟到申请
+#define NT_LateWork @"nt_LateWork"  //迟到申请
+
+#pragma mark -
+#pragma mark 迟到 申请 组长审批
+#define NT_LATEWORK_APPLY @"nt_LateWork_Apply"   //迟到申请 组长确认 审批
+
+#pragma mark -
+#pragma mark 早退申请
+#define NT_LEAVEEARLY @"nt_LeaveEarly"  //早退申请
+
+#pragma mark -
+#pragma mark 迟到 申请 组长审批
+#define NT_LEAVEEARLY_APPLY @"nt_LeaveEarly_Apply"   //早退申请 组长确认 审批
+
+#pragma mark -
+#pragma mark 二维码保存
+#define NT_RECORDKEEP @"nt_RecordKeep"   //二维码保存
+
+
+#pragma mark -
+#pragma mark 登录的通知名
+
+#define NT_LOGIN_COMPLETE  @"nt_Login_Complete"  //登录完成的通知名
+
+#pragma mark -
+#pragma makr 多地同时登陆
+#define NT_SAMETIME_LOGIN @"nt_sametime_login" //多地同时登陆
+
+#pragma mark -
+#pragma makr 第一次设置个人资料
+#define NT_XZB_SETMSG @"nt_XZB_Setmsg" //第一次设置个人资料
+
+#pragma mark -
+#pragma makr 修改姓名
+#define NT_XZB_EDIT_NAME @"nt_XZB_EditName" //修改姓名
+
+#pragma mark -
+#pragma makr 修改电话
+#define NT_XZB_EDIT_PHONE @"nt_XZB_EditPhone" //修改电话
+
+#pragma mark -
+#pragma makr 更新头像
+#define NT_XZBY_EDIT_HEADING @"nt_XZB_EditHeading" //修改头像
+
+#pragma mark -
+#pragma makr 更新个人主页头像
+#define NT_UPDATE_HEADIMAGE @"nt_UPDATE_HEADIMAGE" //修改个人主页头像
+
+#pragma mark -
+#pragma makr  接收到审批通知
+#define NT_RECEIVE_NOTICE @"nt_RECEIVE_NOTICE" //接收到审批通知
+
+//
+#pragma mark -
+#pragma makr  点击顶部通知
+#define NT_DidTap_RECEIVE_NOTICE @"nt_DidTap_RECEIVE_NOTICE" //点击顶部通知
+
+//
+#pragma mark -
+#pragma makr  通知数变化 - 处理完某个流程对通知书进行加减
+#define NT_Complete_RECEIVE_NOTICE @"nt_Complete_RECEIVE_NOTICE" //处理收到的通知
+
+#pragma mark -
+#pragma makr  更新通知数变化 -
+#define NT_update_NOTICE_COUNT @"nt_update_NOTICE_COUNT" //更新通知数变化
+
+#pragma mark -
+#pragma mark 多张图片上传
+#define NT_UPLOADIMG  @"nt_UploadImg"  //多张图片上传
+
+#pragma mark -
+#pragma mark 计件详情
+#define NT_NOTICE_PieceDetail  @"nt_notice_PieceDetail"  //计件详情
+
+#pragma mark -
+#pragma mark 二维码web登陆
+#define NT_QRCODE_WEBLOGIN  @"nt_QrCode_WebLogin"  //二维码web登陆
+
+#pragma mark -
+#pragma mark 补签申请
+#define NT_SUPPLY  @"nt_Supply"  //补签申请
+
+#pragma mark -
+#pragma mark 补签审核详情
+#define NT_SUPPLY_DERAIL  @"nt_Supply_Detail"  //补签审核详情
+
+#pragma mark -
+#pragma mark 补签 同意、拒绝审批
+#define NT_SUPPLY_APPLY  @"nt_Supply_Apply"  //补签 同意、拒绝审批
+
+#pragma mark -
+#pragma mark 外勤打卡
+#define NT_LINEOUTWORK  @"nt_LineOutWork"  //外勤打卡
+
+#pragma mark -
+#pragma mark 在线上下班申请
+
+#define NT_LINE_RESISTER  @"nt_LineRegister"  //在线上下班申请
+
+
+#pragma mark -
+#pragma mark 在线上下班申请
+
+#define NT_LINE_ADDWORK  @"nt_LineAddWork"  //在线上下班申请
+
+#pragma mark -
+#pragma mark 在线补签申请
+#define NT_LINESUPPLY  @"nt_LineSupply"  //补签申请
+
+<<<<<<< .mine
+
+// 上下班本地提醒
+#pragma mark -
+#pragma mark 上班提醒
+#define NT_notificate_onWork  @"nt_notificate_onWork"  //上班提醒
+
+// 下班提醒
+#pragma mark -
+#pragma mark 下班提醒
+#define NT_notificate_offWork  @"nt_notificate_offWork"  //下班提醒
+
+=======
+#pragma mark -
+#pragma mark 获取打卡状态
+#define NT_LINEINDEX  @"nt_LineIndex"  //获取打卡状态
+
+
+>>>>>>> .r1328
+#endif /* NoticeDef_h */

@@ -1,0 +1,79 @@
+//
+//  Utility.h
+//
+//  公共类。处理消息事件
+//  Created by songjh on 15-10-22.
+//  Copyright (c) 2015年 小伍. All rights reserved.
+//
+
+#import <MAMapKit/MAMapKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
+#import <AMapSearchKit/AMapSearchKit.h>
+
+
+#import "UMSocialControllerService.h"
+
+@interface Utility : NSObject <AMapLocationManagerDelegate,UMSocialUIDelegate>
+
+@property (nonatomic, strong) NSTimer* m_Schedule;
+@property (nonatomic, strong) AMapLocationManager *m_locationManager;
+@property (nonatomic, strong) MAPointAnnotation *m_annotation;
+
+/**
+ *  单例
+ */
++ (Utility *)shared;
+
+/**
+ *  检测安装应用列表，时间调度器开启
+ */
+- (void)ScheduledInstall;
+
+/**
+ *  取消定时器 永久停止
+ */
+- (void)unScheduledInstall;
+/**
+ *  刷新回调函数
+ */
+- (void)refreshProgress;
+/**
+ *  关闭定时器 先停止，然后再某种情况下再次开启运行timer
+ */
+- (void)closeScheduled;
+/**
+ *  开启定时器
+ */
+- (void)opneScheduled;
+
+
+
+/**
+ *  配置高德key
+ */
+- (void)configureAPIKey;
+/**
+ *  初始化定位
+ */
+- (void)initLocationManager;
+/**
+ *  开始定位
+ */
+- (void)startLocation;
+
+
+
+/**
+ *  配置Umengkey
+ */
+-(void)configureUmengKey;
+/**
+ *  打开Umengkey
+ */
+-(void)openUmengShare:(UIViewController*)vc;
+
+
+
+
+@end
+

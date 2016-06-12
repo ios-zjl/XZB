@@ -1,0 +1,35 @@
+//
+//  AccontInfo.m
+//  EMM
+//
+//  Created by xingfengzheng on 15/10/22.
+//  Copyright © 2015年 coralsec. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "AccontInfo.h"
+
+@implementation AccontInf
+@synthesize    _tokenId = m_tokenId;      //tokenId
+@synthesize    _strState = m_strState;      //是否是新用户
+@synthesize    _strUserName = m_strUserName;   //用户名
+@synthesize    _strData = m_strData;   //返回结果参数json
+@synthesize    _strSex = m_strSex;       //性别
+@synthesize    _strBirthday = m_strBirthday;     //生日
+@synthesize    _strAddr = m_strAddr; //地址
+@synthesize    _strHeading = m_strHeading;    //头像
+@synthesize    _strBranch = m_strBranch;   //部门
+@synthesize    _strJob = m_strJob;  //职位
+@synthesize    _strOpenId = m_strOpenId;  //企业id
+@synthesize    _strCompany = m_strCompany;  //m_strJobNum
+@synthesize    _strCompanyName = m_strCompanyName;  //公司名称
+@synthesize    _strJobNum = m_strJobNum;  //工号
+
+@synthesize    _strCreateTime = m_strCreateTime;  //工号createTime
+@synthesize    _strPhone = m_strPhone; // 手机号
+@synthesize    _strEmail = m_strEmail;//邮箱
+@synthesize    _arrvacationType = m_ArrVacationType;//请假事项
+@synthesize    _pieceType = m_PieceType;//工序
+@synthesize    _strIsShow = m_strIsShow;//1、显示加入企业 2、不显示加入企业
+@synthesize    _strIsAdmin= m_strIsAdmin;//1、普通员工 2、管理员
+@end

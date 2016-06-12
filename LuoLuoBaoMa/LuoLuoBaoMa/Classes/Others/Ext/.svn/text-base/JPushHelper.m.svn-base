@@ -1,0 +1,40 @@
+//
+//  JPushHelper.m
+//  xingzhengbao
+//
+//  Created by DavyZhang on 16/5/19.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import "JPushHelper.h"
+#import "JPUSHService.h"
+
+@implementation JPushHelper
+
+/** 注册 JPush */
++(void)registerJPush:(NSDictionary *)launchOptions {
+    // Required
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        //可以添加自定义categories
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeSound |
+                                                          UIUserNotificationTypeAlert)
+                                              categories:nil];
+    } else {
+        //categories 必须为nil
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeBadge |
+                                                          UIUserNotificationTypeBadge)
+                                              categories:nil];
+    }
+    NSString *appKey = kJPUSH_AppKey;// 极光推送生成的KEY
+    NSString *channel = @"App Store";//发布渠道,可以随便定义
+    BOOL isProduction = YES;//false;//这个要根据极光推送控制台里设置的是开发环境还是生产环境
+    //Required
+    [JPUSHService setupWithOption:launchOptions
+                           appKey:appKey
+                          channel:channel
+                 apsForProduction:isProduction];
+}
+
+@end

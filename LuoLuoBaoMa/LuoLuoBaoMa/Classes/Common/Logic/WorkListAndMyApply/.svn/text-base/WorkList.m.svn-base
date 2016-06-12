@@ -1,0 +1,22 @@
+//
+//  WorkList.m
+//  xingzhengbao
+//
+//  Created by afyylong on 16/3/30.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import "WorkList.h"
+
+@implementation WorkList
+
+@synthesize _WorkListDict = XZ_WorkListDict;
+
+@end
+
+
+@implementation MyApply
+
+@synthesize _MyApplyDict = XZ_MyApplyDict;
+
+@end

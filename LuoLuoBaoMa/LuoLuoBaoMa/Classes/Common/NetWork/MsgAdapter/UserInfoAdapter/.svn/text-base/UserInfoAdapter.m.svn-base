@@ -1,0 +1,94 @@
+//
+//  UserInfoAdapter.m
+//  xingzhengbao
+//
+//  Created by afyylong on 16/3/30.
+//  Copyright © 2016年 XZB. All rights reserved.
+//
+
+#import "UserInfoAdapter.h"
+#import "HttpConnectMgr.h"
+#import "HttpTool.h"
+#import "WorkListManager.h"
+#import "SVProgressHUD.h"
+
+#define MY_WORKLIST @"myworklist"
+#define MY_APPLY @"myapply"
+
+@implementation UserInfoAdapter
+
++ (UserInfoAdapter *)sharedInstance
+{
+    static dispatch_once_t once;
+    static UserInfoAdapter * sharedAdapter = nil;
+    dispatch_once(&once, ^{
+        sharedAdapter = [[UserInfoAdapter alloc]init];
+    });
+    return sharedAdapter;
+}
+
+//我的考勤
+-(void)msgC2S_WorkList:(NSString *)tokenid  {
+    
+    NSMutableDictionary *body = [NSMutableDictionary dictionary];
+    [body setObject:tokenid forKey:@"token"];
+    
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_WORKLIST andBody:body withSuccessBlock:^(NSDictionary *dict) {
+        NSString *code = dict[@"code"];
+        if ([code isEqualToString:@"000000"]) {
+            
+            NSDictionary *dataDict = dict[@"data"];
+            if (dataDict) {
+                WorkList *workList = [[WorkList alloc] init];
+                workList._WorkListDict = dataDict;
+                
+                [WorkListManager sharedInstance].workList = workList;
+            }
+        }else {
+            [SVProgressHUD showWithStr:@"数据请求失败"];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:MY_WORKLIST object:nil];
+        
+    } withFailBlock:^(NSError *error) {
+        [SVProgressHUD showWithStr:@"网络连接失败"];
+    }];
+}
+
+//我的申请
+-(void)msgC2S_MyApply:(NSString *)tokenid Type:(NSString*)type State:(NSString *)state {
+#warning /data(json)
+    NSMutableDictionary *body = [NSMutableDictionary dictionary];
+    [body setObject:tokenid forKey:@"token"];
+    [body setObject:type forKey:@"type"];
+    [body setObject:state forKey:@"state"];
+    
+    [[HttpConnectMgr shareMgr] requestUrl:XZB_MYAPPLY andBody:body withSuccessBlock:^(NSDictionary *dict) {
+        NSString *code = dict[@"code"];
+        if ([code isEqualToString:@"000000"]) {
+            NSDictionary *dataDict = dict[@"data"];
+            if (dataDict) {
+        
+                MyApply *myApply = [[MyApply alloc] init];
+                myApply._MyApplyDict = dataDict;
+                
+                [WorkListManager sharedInstance].myApply._MyApplyDict = dataDict;
+                
+            }else {
+                [SVProgressHUD showWithStr:@"数据请求失败"];
+            }
+        }else {
+            [SVProgressHUD showWithStr:@"数据请求失败"];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:MY_APPLY object:nil];
+    } withFailBlock:^(NSError *error) {
+        [SVProgressHUD showWithStr:@"网络连接失败"];
+    }];
+    
+}
+
+
+
+
+
+
+@end
